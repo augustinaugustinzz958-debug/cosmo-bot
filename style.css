@@ -1,0 +1,243 @@
+/* Base Reset and Variables */
+:root {
+  /* Color Palette */
+  --bg-dark: #07090f;
+  --bg-darker: #040508;
+  --primary-cyan: #00f0ff;
+  --primary-purple: #8a2be2;
+  --text-main: #e0e6ed;
+  --text-muted: #8c9baf;
+  --glass-bg: rgba(16, 20, 31, 0.6);
+  --glass-border: rgba(0, 240, 255, 0.2);
+    
+  /* Typography */
+  --font-main: 'Outfit', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-darker);
+  color: var(--text-main);
+  overflow: hidden; /* Hide scrollbars for full-screen canvas */
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 3D Background Canvas */
+#space-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Main Content Overlay */
+.content-container {
+  position: relative;
+  z-index: 10;
+  width: 90%;
+  max-width: 700px;
+  padding: 2rem;
+  animation: fadeIn 1.5s ease-out forwards;
+}
+
+/* Glassmorphism Card */
+.intro-glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.05);
+}
+
+/* Typography Styles */
+.logo-title {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.logo-title span {
+  color: var(--primary-cyan);
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+}
+
+.tagline {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-purple);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.description {
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Call to Action Buttons (Control Panels) */
+.cta-container {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.control-panel-btn {
+  position: relative;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.btn-text {
+  position: relative;
+  z-index: 2;
+}
+
+.btn-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, var(--primary-cyan) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  z-index: 1;
+}
+
+.control-panel-btn:hover {
+  border-color: var(--primary-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.control-panel-btn:hover .btn-glow {
+  width: 300px;
+  height: 300px;
+  opacity: 0.2;
+}
+
+.signup-btn {
+  border-color: var(--primary-purple);
+}
+
+.signup-btn .btn-glow {
+  background: radial-gradient(circle, var(--primary-purple) 0%, transparent 70%);
+}
+
+.signup-btn:hover {
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+}
+
+/* Highlight CTAs with bright gradient to improve visibility */
+.control-panel-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.control-panel-btn.login-btn {
+  background: linear-gradient(90deg,#6ee7b7,#4fd1c5); /* cyan-green */
+  color: #042018;
+  border: none;
+  box-shadow: 0 10px 30px rgba(79,209,197,0.12), 0 2px 6px rgba(0,0,0,0.45);
+}
+
+.control-panel-btn.login-btn .btn-glow {
+  background: radial-gradient(circle, rgba(110,231,183,0.9) 0%, transparent 60%);
+}
+
+.control-panel-btn.login-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 50px rgba(79,209,197,0.18), 0 4px 12px rgba(0,0,0,0.5);
+  color: #001214;
+}
+
+.control-panel-btn.signup-btn {
+  background: linear-gradient(90deg,#a78bfa,#8a2be2); /* purple */
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 10px 30px rgba(138,43,226,0.12), 0 2px 6px rgba(0,0,0,0.45);
+}
+
+.control-panel-btn.signup-btn .btn-glow {
+  background: radial-gradient(circle, rgba(138,43,226,0.9) 0%, transparent 60%);
+}
+
+.control-panel-btn.signup-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 50px rgba(138,43,226,0.18), 0 4px 12px rgba(0,0,0,0.5);
+  color: #fff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .intro-glass-card {
+    padding: 2rem 1.5rem;
+  }
+  .logo-title {
+    font-size: 3rem;
+  }
+  .tagline {
+    font-size: 1.2rem;
+  }
+  .cta-container {
+    flex-direction: column;
+  }
+  .control-panel-btn {
+    width: 100%;
+  }
+}
+

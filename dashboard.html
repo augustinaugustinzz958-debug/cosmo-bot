@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — CosmoBot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <!-- Spaceship Cockpit & Visor HUD Overlay -->
+  <div id="cockpit-hud" class="hud-overlay" aria-hidden="true">
+    <div class="hud-visor"></div>
+    <div class="hud-strut strut-left"></div>
+    <div class="hud-strut strut-right"></div>
+    <div class="hud-strut strut-top"></div>
+    <div class="hud-strut strut-bottom"></div>
+
+
+
+    <div class="hud-console console-left">
+      <div class="hud-line">GRAV FIELD: <span class="neon-purple">12.8G</span></div>
+      <div class="hud-line">WARP CORES: <span class="neon-cyan">100%</span></div>
+      <div class="hud-grid-dots"></div>
+    </div>
+
+    <div class="hud-console console-right">
+      <div class="hud-radar">
+        <div class="radar-sweep"></div>
+        <div class="radar-blip"></div>
+      </div>
+      <div class="hud-telemetry">
+        <div>BH DIST: 0.12 LY</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D Galaxy canvas (Three.js) -->
+  <div id="galaxy-container" aria-hidden="true"></div>
+
+  <main class="dashboard-container">
+    <header class="dash-top">
+
+      <nav class="vortex-nav holographic-nav">
+        <span class="nav-item">Systems</span>
+        <span class="nav-item">Frames</span>
+        <span class="nav-item active-mods-tab">Tasks</span>
+        <span class="nav-item">Utility</span>
+      </nav>
+      <div class="dash-actions">
+        <div id="date-time" class="date-time space-hud-clock">--:--:--</div>
+        <button id="logoutBtn" class="btn-ghost">Logout</button>
+        <div class="profile-card">
+          <div id="profile-initial" class="profile-initial">?</div>
+          <div class="profile-tooltip">
+            <div id="user-name" class="profile-name">Loading...</div>
+            <div id="user-email" class="profile-email">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome-card center-card">
+      <h1 class="vessel-title">Mission Control</h1>
+      <p class="vessel-subtitle">Welcome back, Commander <span id="welcome-name">User</span></p>
+    </section>
+
+    <section class="dashboard-grid">
+      <aside class="tasks-panel glass-card">
+        <h3>New Task</h3>
+        <form id="taskForm" class="task-form">
+          <div class="field-group">
+            <label class="field-label">Task Title</label>
+            <input id="taskTitle" placeholder="Enter objective..." required />
+          </div>
+          <div class="field-group">
+            <label class="field-label">Description</label>
+            <textarea id="taskDesc" placeholder="Add mission details..."></textarea>
+          </div>
+          <div class="row">
+            <div class="field-group flex-1">
+              <label class="field-label">Category</label>
+              <select id="taskCategory">
+                <option value="Study">Study</option>
+                <option value="Assignment">Assignment</option>
+                <option value="Event">Event</option>
+                <option value="Reminder">Reminder</option>
+              </select>
+            </div>
+            <div class="field-group flex-1">
+              <label class="field-label">Priority</label>
+              <select id="taskPriority">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="field-group flex-1">
+              <label class="field-label">Date</label>
+              <input id="taskDate" type="date" />
+            </div>
+            <div class="field-group flex-1">
+              <label class="field-label">Time</label>
+              <input id="taskTime" type="time" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="checkbox-row"><input id="taskAudio" type="checkbox" /> Enable Audio Alert</label>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Voice Broadcast Message</label>
+            <input id="taskReminderMsg" placeholder="E.g., study session starts now..." />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Task</button>
+            <button type="button" id="clearForm" class="btn-ghost">Clear</button>
+          </div>
+        </form>
+
+        <div class="analytics">
+          <div class="stat"><div id="totalTasks">0</div><div>Total</div></div>
+          <div class="stat"><div id="completedTasks">0</div><div>Completed</div></div>
+          <div class="stat"><div id="pendingTasks">0</div><div>Pending</div></div>
+          <div class="stat"><div id="todayTasks">0</div><div>Today</div></div>
+        </div>
+      </aside>
+
+      <section class="list-panel glass-card">
+        <h3>Your Tasks</h3>
+        <div id="tasksList" class="tasks-list">Loading tasks...</div>
+      </section>
+    </section>
+
+  </main>
+
+  <!-- Firebase compat libs (no new project config created) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <!-- 3D renderer for realistic galaxy (Three.js + postprocessing) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="dashboard-3d.js"></script>
+
+  <!-- Dashboard application logic -->
+  <script src="dashboard.js" type="module"></script>
+
+</body>
+</html>

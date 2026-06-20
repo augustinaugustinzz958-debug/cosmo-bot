@@ -1,0 +1,176 @@
+/* Premium space theme styling for Auth pages (Login & Register) */
+:root {
+  --glass-bg: rgba(6, 10, 20, 0.55);
+  --glass-border: rgba(0, 240, 255, 0.18);
+  --neon-cyan: #00f0ff;
+  --neon-blue: #0088ff;
+  --bg: #020306;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: #e8eef6;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Glassmorphism Auth Card */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 16px 45px rgba(2, 6, 23, 0.7), 0 0 25px rgba(0, 240, 255, 0.08);
+  z-index: 10;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin: 20px;
+}
+
+.auth-card.register-card {
+  max-width: 520px;
+}
+
+.auth-card:hover {
+  border-color: rgba(0, 240, 255, 0.3);
+  box-shadow: 0 16px 45px rgba(2, 6, 23, 0.75), 0 0 30px rgba(0, 240, 255, 0.14);
+}
+
+.auth-card h1 {
+  margin: 0 0 6px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.auth-card p {
+  margin: 0 0 24px;
+  color: #8c9baf;
+  font-size: 0.88rem;
+  font-weight: 400;
+}
+
+/* Labels and input fields */
+label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 14px;
+  color: #8c9baf;
+  opacity: 0.85;
+}
+
+input, select {
+  width: 100%;
+  padding: 11px 14px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: rgba(4, 6, 12, 0.5);
+  color: #eaf6ff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.25);
+  background: rgba(0, 240, 255, 0.02);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Actions panel & buttons */
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 12px;
+}
+
+.btn {
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan));
+  color: #020306;
+  padding: 11px 22px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.88rem;
+  box-shadow: 0 4px 14px rgba(0, 240, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.45);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.muted, .note {
+  color: #8c9baf;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.muted a, .note a {
+  color: var(--neon-cyan);
+  margin-left: 6px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: text-shadow 0.2s ease;
+}
+
+.muted a:hover, .note a:hover {
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
+}
+
+/* Three.js Background canvas container */
+#galaxy-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#galaxy-container canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

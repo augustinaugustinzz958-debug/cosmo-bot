@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register — CosmoBot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="register.css">
+</head>
+<body>
+  <!-- 3D Space Background canvas -->
+  <div id="galaxy-container" aria-hidden="true"></div>
+
+  <main class="auth-card register-card">
+    <h1 style="margin:0 0 8px">Create account</h1>
+    <p style="margin:0 0 14px;color:#9fb9d0">Fill in your details to register an account.</p>
+    <form id="registerForm">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" required />
+      <div class="row">
+        <div>
+          <label for="age">Age (1-25)</label>
+          <input id="age" name="age" type="number" min="1" max="25" required />
+        </div>
+        <div>
+          <label for="classField">Class (1-12)</label>
+          <input id="classField" name="class" type="number" min="1" max="12" required />
+        </div>
+      </div>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special char" />
+      <label for="confirmPassword">Confirm Password</label>
+      <input id="confirmPassword" name="confirmPassword" type="password" required />
+      <div id="pwdMessage" style="color:#ff8a8a;margin-top:8px" aria-live="polite"></div>
+      <div class="actions">
+        <button id="registerBtn" class="btn" type="submit">Register</button>
+        <div class="note">Back to <a href="login.html" style="color:#6ee7b7;text-decoration:none;margin-left:6px">Login</a></div>
+      </div>
+    </form>
+  </main>
+  <script>
+    const nameInput = document.getElementById('name');
+    const ageInput = document.getElementById('age');
+    const classInput = document.getElementById('classField');
+    const emailInput = document.getElementById('email');
+    const pwd = document.getElementById('password');
+    const cpwd = document.getElementById('confirmPassword');
+    const msg = document.getElementById('pwdMessage');
+    const btn = document.getElementById('registerBtn');
+
+    function validateForm() {
+      // 1. Age check
+      if (ageInput.value) {
+        const ageVal = parseInt(ageInput.value, 10);
+        if (isNaN(ageVal) || ageVal < 1 || ageVal > 25) {
+          msg.textContent = 'Age must be between 1 and 25';
+          btn.disabled = true;
+          return false;
+        }
+      }
+
+      // 2. Class check
+      if (classInput.value) {
+        const classVal = parseInt(classInput.value, 10);
+        if (isNaN(classVal) || classVal < 1 || classVal > 12) {
+          msg.textContent = 'Class must be between 1 and 12';
+          btn.disabled = true;
+          return false;
+        }
+      }
+
+      // 3. Email check
+      if (emailInput.value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value.trim())) {
+          msg.textContent = 'Please enter a valid email address';
+          btn.disabled = true;
+          return false;
+        }
+      }
+
+      // 4. Password strength check
+      if (pwd.value) {
+        const p = pwd.value;
+        if (p.length < 8) {
+          msg.textContent = 'Password must be at least 8 characters';
+          btn.disabled = true;
+          return false;
+        }
+        if (!/[A-Z]/.test(p)) {
+          msg.textContent = 'Password needs at least one uppercase letter';
+          btn.disabled = true;
+          return false;
+        }
+        if (!/[a-z]/.test(p)) {
+          msg.textContent = 'Password needs at least one lowercase letter';
+          btn.disabled = true;
+          return false;
+        }
+        if (!/\d/.test(p)) {
+          msg.textContent = 'Password needs at least one number';
+          btn.disabled = true;
+          return false;
+        }
+        if (!/[@$!%*?&]/.test(p)) {
+          msg.textContent = 'Password needs at least one special character (@$!%*?&)';
+          btn.disabled = true;
+          return false;
+        }
+      }
+
+      // 5. Password matching check
+      if (pwd.value && cpwd.value && pwd.value !== cpwd.value) {
+        msg.textContent = 'Passwords do not match';
+        btn.disabled = true;
+        return false;
+      }
+
+      msg.textContent = '';
+      btn.disabled = false;
+      return true;
+    }
+
+    ageInput.addEventListener('input', validateForm);
+    classInput.addEventListener('input', validateForm);
+    emailInput.addEventListener('input', validateForm);
+    pwd.addEventListener('input', validateForm);
+    cpwd.addEventListener('input', validateForm);
+
+    document.getElementById('registerForm').addEventListener('submit', async function(e){
+      e.preventDefault();
+
+      // Perform final validation
+      if (!validateForm()) return;
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = pwd.value;
+
+      if(window.firebase && firebase.auth){
+        try{
+          const res = await firebase.auth().createUserWithEmailAndPassword(email, password);
+          if(res.user && name){
+            await res.user.updateProfile({ displayName: name });
+          }
+          // Redirect straight to dashboard after register
+          window.location.href = 'dashboard.html';
+        }catch(err){
+          alert(err.message || 'Registration failed');
+        }
+        return;
+      }
+
+      // Fallback demo behaviour
+      localStorage.setItem('currentUser', JSON.stringify({ displayName: name, email: email }));
+      alert('Registration successful! Redirecting to dashboard.');
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+  <!-- Three.js + Space BG Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="register-bg.js"></script>
+</body>
+</html>
