@@ -1,153 +1,172 @@
-/* Premium space theme styling for Login page */
-:root {
-  --glass-bg: rgba(6, 10, 20, 0.55);
-  --glass-border: rgba(0, 240, 255, 0.18);
-  --neon-cyan: #00f0ff;
-  --neon-blue: #0088ff;
-  --bg: #020306;
+/* ================================================================
+   COSMOBOT — SPACESHIP COCKPIT HUD & VISOR STYLES (Login Page)
+   ================================================================ */
+
+/* Fullscreen visor framework */
+.hud-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: 240px 1fr 240px;
+  grid-template-rows: 80px 1fr 80px;
+  border: 1px solid rgba(212, 160, 23, 0.06);
 }
 
-* {
-  box-sizing: border-box;
+/* Glassmorphism bezel cabin panels */
+.hud-strut {
+  background: rgba(4, 6, 12, 0.88);
+  border: 1.5px solid rgba(120, 135, 160, 0.22);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.95);
 }
 
-body {
-  font-family: 'Outfit', sans-serif;
-  background: var(--bg);
-  color: #e8eef6;
-  margin: 0;
-  min-height: 100vh;
+/* Top cabin panel */
+.strut-top {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  border-bottom: 2px solid rgba(212, 160, 23, 0.12);
+  color: #D4A017;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Left controls dashboard console */
+.console-left {
+  grid-column: 1;
+  grid-row: 2;
+  background: rgba(3, 4, 8, 0.92);
+  border-right: 2px solid rgba(212, 160, 23, 0.12);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: inset -10px 0 20px rgba(0,0,0,0.8);
+}
+
+/* Right controls dashboard console */
+.console-right {
+  grid-column: 3;
+  grid-row: 2;
+  background: rgba(3, 4, 8, 0.92);
+  border-left: 2px solid rgba(212, 160, 23, 0.12);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: inset 10px 0 20px rgba(0,0,0,0.8);
+}
+
+/* Bottom cabin panel */
+.strut-bottom {
+  grid-column: 1 / 4;
+  grid-row: 3;
+  border-top: 2px solid rgba(212, 160, 23, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Glassmorphism Auth Card */
-.auth-card {
-  width: 100%;
-  max-width: 420px;
-  padding: 32px;
-  border-radius: 16px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 16px 45px rgba(2, 6, 23, 0.7), 0 0 25px rgba(0, 240, 255, 0.08);
-  z-index: 10;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  margin: 20px;
-}
-
-.auth-card:hover {
-  border-color: rgba(0, 240, 255, 0.3);
-  box-shadow: 0 16px 45px rgba(2, 6, 23, 0.75), 0 0 30px rgba(0, 240, 255, 0.14);
-}
-
-.auth-card h1 {
-  margin: 0 0 6px;
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
-}
-
-.auth-card p {
-  margin: 0 0 24px;
-  color: #8c9baf;
-  font-size: 0.88rem;
-  font-weight: 400;
-}
-
-/* Labels and input fields */
-label {
-  display: block;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin-top: 14px;
-  color: #8c9baf;
-  opacity: 0.85;
 }
 
-input {
-  width: 100%;
-  padding: 11px 14px;
-  margin-top: 6px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  background: rgba(4, 6, 12, 0.5);
-  color: #eaf6ff;
-  font-family: inherit;
-  font-size: 0.88rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+/* Console details and readouts */
+.hud-title {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-input:focus {
-  outline: none;
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 8px rgba(0, 240, 255, 0.25);
-  background: rgba(0, 240, 255, 0.02);
-}
-
-/* Actions panel & buttons */
-.actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 24px;
-  gap: 12px;
-}
-
-.btn {
-  background: linear-gradient(90deg, var(--neon-blue), var(--neon-cyan));
-  color: #020306;
-  padding: 11px 22px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
+.hud-value {
+  color: #ffffff;
   font-weight: 800;
-  font-size: 0.88rem;
-  box-shadow: 0 4px 14px rgba(0, 240, 255, 0.3);
-  transition: all 0.2s ease;
+  font-size: 1.05rem;
+  font-family: monospace;
+  margin-top: 0.25rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
 }
 
-.btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 240, 255, 0.45);
+.neon-cyan {
+  color: #D4A017 !important;
+  text-shadow: 0 0 15px rgba(212, 160, 23, 0.35) !important;
 }
 
-.muted {
-  color: #8c9baf;
-  font-size: 0.82rem;
-  font-weight: 600;
+.neon-purple {
+  color: var(--primary-purple) !important;
+  text-shadow: var(--glow-purple) !important;
 }
 
-.muted a {
-  color: var(--neon-cyan);
-  margin-left: 6px;
-  text-decoration: none;
-  font-weight: 700;
-  transition: text-shadow 0.2s ease;
+/* Visor crosshair grid overlay in middle screen */
+.hud-visor-grid {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  overflow: hidden;
 }
 
-.muted a:hover {
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
+.hud-visor-grid::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(212, 160, 23, 0.08);
 }
 
-/* Three.js Background canvas container */
-#galaxy-container {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
+.hud-visor-grid::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(212, 160, 23, 0.08);
 }
 
-#galaxy-container canvas {
+.hud-radar {
   width: 100%;
-  height: 100%;
-  display: block;
+  aspect-ratio: 1;
+  border: 1px solid rgba(192, 192, 192, 0.15);
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle, rgba(192, 192, 192, 0.03) 0%, transparent 80%);
+}
+
+.radar-sweep {
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(from 0deg, rgba(212, 160, 23, 0.25) 0deg, transparent 90deg);
+  border-radius: 50%;
+  animation: radarSweep 3.5s linear infinite;
+  transform-origin: center;
+}
+
+/* Radar sweep animation */
+@keyframes radarSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Adaptive mobile layout: collapses cockpit sidebar struts on small viewports */
+@media (max-width: 1024px) {
+  .hud-overlay {
+    grid-template-columns: 0px 1fr 0px;
+    grid-template-rows: 60px 1fr 40px;
+  }
+  .console-left, .console-right {
+    display: none;
+  }
 }

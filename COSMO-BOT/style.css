@@ -1,0 +1,4 @@
+/* ...existing code... */
+body { margin:0; font-family: sans-serif; background: #000; color:#fff; }
+/* assets referenced: assets/effects/starfield.png */
+body { background-image: url('assets/effects/starfield.png'); background-size: cover; }

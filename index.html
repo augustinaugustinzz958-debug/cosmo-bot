@@ -1,45 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CosmoBot - Your AI Study Companion</title>
-    <meta name="description" content="CosmoBot is an AI-powered study assistant in a distraction-free, space-themed environment.">
-    <!-- Google Fonts: Outfit for a modern, futuristic look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CosmoBot — AI-Powered Virtual Study Companion</title>
+  <meta name="description" content="CosmoBot is an AI-powered study companion that helps students learn, practice, and sync progress across devices.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="landing.css">
 </head>
-<body>
-    <!-- 3D Solar System Background Canvas -->
-    <canvas id="space-canvas"></canvas>
+<body class="landing-body">
+  <!-- Fullscreen 3D Space Engine Background Container -->
+  <div id="galaxy-container" aria-hidden="true"></div>
 
-    <!-- Main Content Overlay -->
-    <main class="content-container">
-        <!-- Introduction Section -->
-        <section class="intro-glass-card">
-            <h1 class="logo-title">Cosmo<span>Bot</span></h1>
-            <p class="tagline">Your AI-Powered Virtual Study Companion</p>
-            <p class="description">
-                Escape the distractions of your smartphone. CosmoBot brings your planner, reminders, and an intelligent chatbot into one centralized, immersive, space-themed environment. Focus better, study smarter.
-            </p>
+  <!-- Countdown overlay for launch animation -->
+  <div id="countdown-hud" class="countdown-hud" aria-live="polite"></div>
+
+  <!-- Fullscreen Transition Overlay -->
+  <div class="transition-overlay"></div>
+
+  <!-- Scroll Container -->
+  <div class="landing-scroll-container">
+    <div class="hero-section">
+      <div id="heroContent" class="hero-content">
+        <!-- 1. CosmoBot Logo -->
+        <div class="logo-container">
+          <div class="logo-glow" aria-hidden="true"></div>
+          <h1 class="logo-text">Cosmo<span>Bot</span></h1>
+        </div>
+        
+        <!-- 2. AI Study Companion subtitle -->
+        <div class="hero-badge">AI Study Companion</div>
+        
+        <!-- 3. Main heading -->
+        <h2 class="hero-subtitle">YOUR AI-POWERED VIRTUAL STUDY COMPANION</h2>
+        
+        <!-- 4. Description -->
+        <p class="hero-lead">Learn smarter. Stay organized. Achieve more.</p>
+
+        <!-- 5. Login / Register Buttons directly below heading -->
+        <div class="hero-buttons">
+          <button id="loginBtn" class="btn btn-auth btn-login">LOGIN</button>
+          <button id="registerBtn" class="btn btn-auth btn-register">REGISTER</button>
+        </div>
+
+        <!-- 6. Introduction card immediately below the buttons -->
+        <main class="intro-section" role="main">
+          <div class="intro-card">
+            <!-- Decorative Saturn Gold orbit ring -->
+            <div class="card-orbit-ring" aria-hidden="true"></div>
             
-            <!-- Call to Action Buttons -->
-            <div class="cta-container">
-                <a class="control-panel-btn login-btn" href="login.html">
-                    <span class="btn-text">Login</span>
-                    <div class="btn-glow"></div>
-                </a>
-                <a class="control-panel-btn signup-btn" href="register.html">
-                    <span class="btn-text">Register</span>
-                    <div class="btn-glow"></div>
-                </a>
-            </div>
-        </section>
-    </main>
+            <h2 class="intro-title">Your Cosmic Learning Companion</h2>
+            <p class="intro-description">CosmoBot is an AI-powered study companion that helps students learn, practice, and sync progress across devices.</p>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js"></script>
+            <!-- Feature Cards Grid -->
+            <div class="features-grid">
+              <!-- SMART -->
+              <section class="feature-card">
+                <div class="feature-icon-wrap">
+                  <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/></svg>
+                </div>
+                <h3 class="feature-label">SMART</h3>
+                <p class="feature-desc">Intelligent, responsive interactions that adapt to each user's curiosity and engagement.</p>
+              </section>
+
+              <!-- COMPANION -->
+              <section class="feature-card">
+                <div class="feature-icon-wrap">
+                  <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg>
+                </div>
+                <h3 class="feature-label">COMPANION</h3>
+                <p class="feature-desc">Interactive companion for hands-on learning.</p>
+              </section>
+
+              <!-- CLOUD-SYNC -->
+              <section class="feature-card">
+                <div class="feature-icon-wrap">
+                  <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                </div>
+                <h3 class="feature-label">CLOUD-SYNC</h3>
+                <p class="feature-desc">Seamless profile synchronization across devices and sessions.</p>
+              </section>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Footer Space -->
+    <footer class="landing-footer">
+      <p>Trusted by students worldwide</p>
+    </footer>
+  </div>
+
+  <!-- Libraries: Three.js, GSAP, and SpaceEngine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="space-engine.js"></script>
+  <script src="script.js"></script>
+  <script src="starfield-gen.js"></script>
 </body>
 </html>

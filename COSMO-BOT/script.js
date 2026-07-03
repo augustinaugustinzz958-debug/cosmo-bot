@@ -1,0 +1,1 @@
+console.log('COSMO-BOT script loaded');

@@ -3,54 +3,108 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard — CosmoBot</title>
+  <title>Study Dashboard — CosmoBot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="dashboard.css">
+  <style>
+    /* Override grid to be 2-column, since the chatbot is now floating */
+    .dashboard-grid {
+      grid-template-columns: 320px 1fr !important;
+    }
+
+    /* Force display: flex on content area to ensure gap works, overriding the JS block change */
+    .workspace-content-area {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1.2rem !important;
+    }
+    
+    /* Better spacing and alignment for study explorer elements */
+    .study-progress-row {
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .study-card-content {
+      background: rgba(0, 0, 0, 0.25) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      padding: 1.8rem !important;
+      border-radius: 12px !important;
+    }
+    
+    .study-card-content p {
+      font-size: 0.95rem !important;
+      line-height: 1.7 !important;
+      margin-bottom: 1.8rem !important;
+    }
+    
+    .study-actions-row {
+      display: flex !important;
+      gap: 16px !important;
+    }
+
+    /* Clean syllabus tree spacing and chapter node alignment */
+    .syllabus-tree {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+    .syllabus-subject {
+      background: rgba(255, 255, 255, 0.02) !important;
+      border: 1px solid rgba(255, 255, 255, 0.06) !important;
+      border-radius: 10px !important;
+    }
+    .subject-title-row {
+      display: flex !important;
+      align-items: center !important;
+      padding: 12px 16px !important;
+      cursor: pointer !important;
+    }
+    .chapter-node {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      padding: 10px 16px 10px 32px !important;
+    }
+  </style>
 </head>
 <body>
-  <!-- Spaceship Cockpit & Visor HUD Overlay -->
-  <div id="cockpit-hud" class="hud-overlay" aria-hidden="true">
-    <div class="hud-visor"></div>
-    <div class="hud-strut strut-left"></div>
-    <div class="hud-strut strut-right"></div>
-    <div class="hud-strut strut-top"></div>
-    <div class="hud-strut strut-bottom"></div>
-
-
-
-    <div class="hud-console console-left">
-      <div class="hud-line">GRAV FIELD: <span class="neon-purple">12.8G</span></div>
-      <div class="hud-line">WARP CORES: <span class="neon-cyan">100%</span></div>
-      <div class="hud-grid-dots"></div>
-    </div>
-
-    <div class="hud-console console-right">
-      <div class="hud-radar">
-        <div class="radar-sweep"></div>
-        <div class="radar-blip"></div>
-      </div>
-      <div class="hud-telemetry">
-        <div>BH DIST: 0.12 LY</div>
-      </div>
-    </div>
+  <!-- Liquid Wave Transition Overlay -->
+  <div id="liquid-overlay" class="liquid-overlay">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path d="M0,0 L100,0 L100,85 Q75,100 50,85 T0,85 Z" fill="#040814" />
+    </svg>
   </div>
 
-  <!-- 3D Galaxy canvas (Three.js) -->
+  <!-- CSS Multi-layer Starfield Background -->
+  <div class="starfield-layer stars-sm"></div>
+  <div class="starfield-layer stars-md"></div>
+  <div class="starfield-layer stars-lg"></div>
+  <div class="nebula-overlay"></div>
+
+  <!-- 3D Space Canvas (Three.js) -->
   <div id="galaxy-container" aria-hidden="true"></div>
 
-  <main class="dashboard-container">
+  <!-- Main Dashboard UI Layout -->
+  <main class="dashboard-container" style="opacity: 0; pointer-events: none;">
     <header class="dash-top">
-
+      <div class="logo-area">
+        <span class="logo-text">Cosmo<span>Bot</span></span>
+      </div>
       <nav class="vortex-nav holographic-nav">
-        <span class="nav-item">Systems</span>
-        <span class="nav-item">Frames</span>
-        <span class="nav-item active-mods-tab">Tasks</span>
-        <span class="nav-item">Utility</span>
+        <span class="nav-item active" data-panel="panel-syllabus">Syllabus</span>
+        <span class="nav-item" data-panel="panel-tasks">Tasks</span>
+        <span class="nav-item" data-panel="panel-planner">Planner</span>
+        <span class="nav-item" data-panel="panel-calendar">Calendar</span>
+        <span class="nav-item" data-panel="panel-analytics">Analytics</span>
       </nav>
       <div class="dash-actions">
+        <div class="notification-bell-wrapper" style="position: relative; cursor: pointer; margin-right: 12px; display: flex; align-items: center;" title="System Notifications">
+          <span class="bell-icon" style="font-size: 1.25rem;">🔔</span>
+          <span class="bell-badge" style="position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; font-size: 0.65rem; padding: 2px 5px; font-weight: bold; border: 1.5px solid #040814; line-height: 1;">3</span>
+        </div>
         <div id="date-time" class="date-time space-hud-clock">--:--:--</div>
         <button id="logoutBtn" class="btn-ghost">Logout</button>
         <div class="profile-card">
@@ -63,95 +117,916 @@
       </div>
     </header>
 
-    <section class="welcome-card center-card">
-      <h1 class="vessel-title">Mission Control</h1>
-      <p class="vessel-subtitle">Welcome back, Commander <span id="welcome-name">User</span></p>
-    </section>
+    <!-- Workspace Content View Area — Three-Column Grid -->
+    <div class="workspace-content dashboard-grid">
+      
+      <!-- Left Column: Context-Aware Sidebar Widgets -->
+      <aside class="dashboard-left">
+        <!-- Syllabus Tree Widget -->
+        <div id="widget-syllabus" class="widget-card glass-card active-widget">
+          <div class="widget-header">
+            <h3>Syllabus Navigation</h3>
+          </div>
+          <div class="widget-body">
+            <div class="syllabus-tree">
+              <!-- Mathematics -->
+              <div class="syllabus-subject" data-subject="math">
+                <div class="subject-title-row">
+                  <span class="toggle-arrow">▼</span>
+                  <span class="folder-icon">📚</span>
+                  <span class="subject-name">Mathematics</span>
+                  <span class="subject-badge">68%</span>
+                </div>
+                <ul class="chapter-sublist">
+                  <li class="chapter-node studied" data-subject="math" data-chapter="Algebra">
+                    <span class="node-icon">✓</span>
+                    <div class="node-info">
+                      <span class="node-title">Algebra</span>
+                      <span class="node-desc">Completed on June 18</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node active-node" data-subject="math" data-chapter="Calculus">
+                    <span class="node-icon">➜</span>
+                    <div class="node-info">
+                      <span class="node-title">Calculus</span>
+                      <span class="node-desc">In Progress — 42% complete</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node locked" data-subject="math" data-chapter="Trigonometry">
+                    <span class="node-icon">🔒</span>
+                    <div class="node-info">
+                      <span class="node-title">Trigonometry</span>
+                      <span class="node-desc">Locked</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node locked" data-subject="math" data-chapter="Statistics">
+                    <span class="node-icon">🔒</span>
+                    <div class="node-info">
+                      <span class="node-title">Statistics</span>
+                      <span class="node-desc">Locked</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
 
-    <section class="dashboard-grid">
-      <aside class="tasks-panel glass-card">
-        <h3>New Task</h3>
-        <form id="taskForm" class="task-form">
-          <div class="field-group">
-            <label class="field-label">Task Title</label>
-            <input id="taskTitle" placeholder="Enter objective..." required />
-          </div>
-          <div class="field-group">
-            <label class="field-label">Description</label>
-            <textarea id="taskDesc" placeholder="Add mission details..."></textarea>
-          </div>
-          <div class="row">
-            <div class="field-group flex-1">
-              <label class="field-label">Category</label>
-              <select id="taskCategory">
-                <option value="Study">Study</option>
-                <option value="Assignment">Assignment</option>
-                <option value="Event">Event</option>
-                <option value="Reminder">Reminder</option>
-              </select>
-            </div>
-            <div class="field-group flex-1">
-              <label class="field-label">Priority</label>
-              <select id="taskPriority">
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="field-group flex-1">
-              <label class="field-label">Date</label>
-              <input id="taskDate" type="date" />
-            </div>
-            <div class="field-group flex-1">
-              <label class="field-label">Time</label>
-              <input id="taskTime" type="time" />
-            </div>
-          </div>
-          <div class="field-group">
-            <label class="checkbox-row"><input id="taskAudio" type="checkbox" /> Enable Audio Alert</label>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Voice Broadcast Message</label>
-            <input id="taskReminderMsg" placeholder="E.g., study session starts now..." />
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn-primary">Save Task</button>
-            <button type="button" id="clearForm" class="btn-ghost">Clear</button>
-          </div>
-        </form>
+              <!-- Science -->
+              <div class="syllabus-subject collapsed" data-subject="science">
+                <div class="subject-title-row">
+                  <span class="toggle-arrow">▶</span>
+                  <span class="folder-icon">📚</span>
+                  <span class="subject-name">Science</span>
+                  <span class="subject-badge">54%</span>
+                </div>
+                <ul class="chapter-sublist">
+                  <li class="chapter-node studied" data-subject="science" data-chapter="Physics">
+                    <span class="node-icon">✓</span>
+                    <div class="node-info">
+                      <span class="node-title">Physics</span>
+                      <span class="node-desc">Completed on June 12</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node active-node" data-subject="science" data-chapter="Chemistry">
+                    <span class="node-icon">➜</span>
+                    <div class="node-info">
+                      <span class="node-title">Chemistry</span>
+                      <span class="node-desc">In Progress — 54% complete</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node locked" data-subject="science" data-chapter="Biology">
+                    <span class="node-icon">🔒</span>
+                    <div class="node-info">
+                      <span class="node-title">Biology</span>
+                      <span class="node-desc">Locked</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
 
-        <div class="analytics">
-          <div class="stat"><div id="totalTasks">0</div><div>Total</div></div>
-          <div class="stat"><div id="completedTasks">0</div><div>Completed</div></div>
-          <div class="stat"><div id="pendingTasks">0</div><div>Pending</div></div>
-          <div class="stat"><div id="todayTasks">0</div><div>Today</div></div>
+              <!-- English -->
+              <div class="syllabus-subject collapsed" data-subject="english">
+                <div class="subject-title-row">
+                  <span class="toggle-arrow">▶</span>
+                  <span class="folder-icon">📚</span>
+                  <span class="subject-name">English</span>
+                  <span class="subject-badge">90%</span>
+                </div>
+                <ul class="chapter-sublist">
+                  <li class="chapter-node studied" data-subject="english" data-chapter="Literature">
+                    <span class="node-icon">✓</span>
+                    <div class="node-info">
+                      <span class="node-title">Shakespearean Literature</span>
+                      <span class="node-desc">Completed on June 15</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node active-node" data-subject="english" data-chapter="Composition">
+                    <span class="node-icon">➜</span>
+                    <div class="node-info">
+                      <span class="node-title">Narrative Voice & POV</span>
+                      <span class="node-desc">In Progress — 90% complete</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Social Science -->
+              <div class="syllabus-subject collapsed" data-subject="social">
+                <div class="subject-title-row">
+                  <span class="toggle-arrow">▶</span>
+                  <span class="folder-icon">📚</span>
+                  <span class="subject-name">Social Science</span>
+                  <span class="subject-badge">82%</span>
+                </div>
+                <ul class="chapter-sublist">
+                  <li class="chapter-node studied" data-subject="social" data-chapter="History">
+                    <span class="node-icon">✓</span>
+                    <div class="node-info">
+                      <span class="node-title">History: French Revolution</span>
+                      <span class="node-desc">Completed on June 10</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node active-node" data-subject="social" data-chapter="Geography">
+                    <span class="node-icon">➜</span>
+                    <div class="node-info">
+                      <span class="node-title">Geography: Industrial Shifts</span>
+                      <span class="node-desc">In Progress — 82% complete</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Computer Science -->
+              <div class="syllabus-subject collapsed" data-subject="computer">
+                <div class="subject-title-row">
+                  <span class="toggle-arrow">▶</span>
+                  <span class="folder-icon">📚</span>
+                  <span class="subject-name">Computer Science</span>
+                  <span class="subject-badge">75%</span>
+                </div>
+                <ul class="chapter-sublist">
+                  <li class="chapter-node studied" data-subject="computer" data-chapter="Algorithms">
+                    <span class="node-icon">✓</span>
+                    <div class="node-info">
+                      <span class="node-title">Sorting & Big O Notation</span>
+                      <span class="node-desc">Completed on June 20</span>
+                    </div>
+                  </li>
+                  <li class="chapter-node active-node" data-subject="computer" data-chapter="Structures">
+                    <span class="node-icon">➜</span>
+                    <div class="node-info">
+                      <span class="node-title">Data Structures & Trees</span>
+                      <span class="node-desc">In Progress — 75% complete</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks Form Widget -->
+        <div id="widget-tasks" class="widget-card glass-card">
+          <div class="widget-header">
+            <h3>New Objective</h3>
+          </div>
+          <div class="widget-body">
+            <form id="taskForm" class="task-form">
+              <div class="field-group">
+                <label class="field-label" for="taskTitle">Task Title</label>
+                <input id="taskTitle" placeholder="Enter objective..." required style="width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:8px; color:#fff;" />
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="taskDesc">Description</label>
+                <textarea id="taskDesc" placeholder="Add mission details..." style="width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:8px; color:#fff; height:60px;"></textarea>
+              </div>
+              <div class="row" style="display: flex; gap: 1rem;">
+                <div class="field-group flex-1" style="flex: 1;">
+                  <label class="field-label" for="taskCategory">Category</label>
+                  <select id="taskCategory" style="width:100%; background:rgba(8,16,28,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:8px; color:#fff;">
+                    <option value="Study">Study</option>
+                    <option value="Assignment">Assignment</option>
+                    <option value="Event">Event</option>
+                    <option value="Reminder">Reminder</option>
+                  </select>
+                </div>
+                <div class="field-group flex-1" style="flex: 1;">
+                  <label class="field-label" for="taskPriority">Priority</label>
+                  <select id="taskPriority" style="width:100%; background:rgba(8,16,28,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:8px; color:#fff;">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row" style="display: flex; gap: 1rem;">
+                <div class="field-group flex-1" style="flex: 1;">
+                  <label class="field-label" for="taskDate">Date</label>
+                  <input id="taskDate" type="date" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:8px; color:#fff;" />
+                </div>
+                <div class="field-group flex-1" style="flex: 1;">
+                  <label class="field-label" for="taskTime">Time</label>
+                  <input id="taskTime" type="time" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:8px; color:#fff;" />
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="checkbox-row" style="display: flex; align-items: center; gap: 6px;"><input id="taskAudio" type="checkbox" style="width: auto; margin-top: 0;" /> Enable Audio Alert</label>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="taskReminderMsg">Voice Broadcast Message</label>
+                <input id="taskReminderMsg" placeholder="E.g., study session starts now..." style="width:100%; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:8px; color:#fff;" />
+              </div>
+              <div class="form-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                <button type="submit" class="btn-primary" style="flex: 1;">Save Task</button>
+                <button type="button" id="clearForm" class="btn-ghost">Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Planner Milestone Preview Widget -->
+        <div id="widget-planner" class="widget-card glass-card">
+          <div class="widget-header">
+            <h3>Upcoming Milestones</h3>
+          </div>
+          <div class="widget-body">
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); padding: 1.2rem; border-radius: 12px;">
+              <ul style="padding-left: 1.2rem; line-height: 2.2; color: #bcd3e6; margin: 0;">
+                <li>Math Exam Revision: <span class="neon-cyan" style="font-weight: 600;">T-minus 5 days</span></li>
+                <li>Physics Lab Submission: <span class="neon-purple" style="font-weight: 600;">T-minus 8 days</span></li>
+                <li>CS Coding Project: <span class="neon-cyan" style="font-weight: 600;">T-minus 12 days</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Controls Widget -->
+        <div id="widget-calendar" class="widget-card glass-card">
+          <div class="widget-header">
+            <h3>Calendar Coordinates</h3>
+          </div>
+          <div class="widget-body">
+            <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+              <button id="prev-month-btn" class="btn-icon" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">◀</button>
+              <h3 id="calendar-month-year" style="margin:0; font-size:0.95rem; font-weight:700;">June 2026</h3>
+              <button id="next-month-btn" class="btn-icon" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">▶</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analytics Streak Widget -->
+        <div id="widget-analytics" class="widget-card glass-card">
+          <div class="widget-header">
+            <h3>Cadet Telemetry</h3>
+          </div>
+          <div class="widget-body">
+            <div class="streak-badge-wrap" style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 12px;">
+              <span class="streak-fire" style="font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.4));">🔥</span>
+              <div class="streak-num-wrap" style="display: flex; flex-direction: column;">
+                <span id="analytics-streak-days" class="streak-num" style="font-size: 2rem; font-weight: 800; color: #ff5500; line-height: 1;">5</span>
+                <span class="streak-label" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 3px;">Day Streak</span>
+              </div>
+            </div>
+            <p class="stat-footer" style="font-size: 0.75rem; color: #a5b4fc; margin: 0; font-style: italic;">You are in the top 8% of students this week!</p>
+          </div>
         </div>
       </aside>
 
-      <section class="list-panel glass-card">
-        <h3>Your Tasks</h3>
-        <div id="tasksList" class="tasks-list">Loading tasks...</div>
-      </section>
-    </section>
+      <!-- Center Column: Main Workspace detail views -->
+      <section class="dashboard-center">
+        <!-- Permanent Welcome Card -->
+        <div class="welcome-card glass-card" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 6px; padding: 1.25rem 1.5rem; background: linear-gradient(135deg, rgba(6, 15, 36, 0.6) 0%, rgba(13, 27, 61, 0.4) 100%);">
+          <div class="welcome-badge" style="align-self: flex-start; background: rgba(77, 163, 255, 0.15); border: 1px solid rgba(77, 163, 255, 0.3); color: #7DF9FF; font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase;">System Online // Cadet Trajectory Stable</div>
+          <h2 class="welcome-title" style="margin: 4px 0 0; font-size: 1.45rem; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">Welcome back, Cadet <span id="welcome-user-name" style="color: #7DF9FF;">Explorer</span><span id="welcome-class-badge" style="font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; display: none;"></span></h2>
+          <p id="welcome-academy-subtitle" class="welcome-subtitle" style="margin: 0; font-size: 0.85rem; color: #cbd5e1;">Your learning telemetry is solid. Select navigation tabs above to execute study modules.</p>
+        </div>
 
+        <div class="center-panel-wrapper" style="flex-grow: 1; position: relative;">
+          <!-- Syllabus Workspace Panel -->
+          <section id="panel-syllabus" class="workspace-panel active-view">
+            <div class="panel-header">
+              <h2>Syllabus Explorer</h2>
+              <p>Select chapters on the left navigation tree to load your learning modules.</p>
+            </div>
+            <div class="syllabus-workspace glass-card" style="height: calc(100% - 75px); overflow-y: auto;">
+              <div id="syllabus-empty-state" class="workspace-empty-state">
+                <span class="empty-icon">📖</span>
+                <h3>Select a chapter to study</h3>
+                <p>Choose an active or completed chapter from the syllabus navigation tree on the left to view notes, complete lessons, and query your AI tutor.</p>
+              </div>
+              <div id="syllabus-content-area" class="workspace-content-area" style="display: none;">
+                <h3 id="study-chapter-title">Chapter Title</h3>
+                <div class="study-progress-row">
+                  <span id="study-chapter-status" class="tag tag-study">Active</span>
+                  <span id="study-chapter-progress-text">Progress: 42%</span>
+                </div>
+                <div class="study-card-content">
+                  <h4>AI Lesson Overview</h4>
+                  <p id="study-chapter-summary">Detailed lesson summary notes appear here...</p>
+                  <div class="study-actions-row">
+                    <button id="btn-study-ask-tutor" class="btn-primary">Ask AI Tutor about this</button>
+                    <button id="btn-study-complete" class="btn-ghost">Mark Chapter Completed</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Tasks Panel -->
+          <section id="panel-tasks" class="workspace-panel">
+            <div class="panel-header">
+              <h2>Objective Database</h2>
+              <p>Review and complete your currently assigned missions.</p>
+            </div>
+            <div class="glass-card task-list-card" style="height: calc(100% - 75px); overflow-y: auto;">
+              <h4 style="margin-bottom: 0.8rem; color: #ffffff;">Your Active Objectives</h4>
+              <div id="tasksList" class="tasks-list">Loading tasks...</div>
+            </div>
+          </section>
+
+          <!-- Planner Panel -->
+          <section id="panel-planner" class="workspace-panel">
+            <div class="panel-header">
+              <h2>Mission Planner</h2>
+              <p>Schedule your long-term study milestones and semesters.</p>
+            </div>
+            <div class="planner-content glass-card" style="padding: 1.5rem; color: var(--text-muted); height: calc(100% - 75px); overflow-y: auto;">
+              <p>Plot your academic trajectories and long-term milestones. Sync schedules with your curriculum targets.</p>
+            </div>
+          </section>
+
+          <!-- Calendar Panel -->
+          <section id="panel-calendar" class="workspace-panel">
+            <div class="panel-header">
+              <h2>Temporal Matrix</h2>
+              <p>Monthly overview of deadlines, milestones, and sessions.</p>
+            </div>
+            <div class="calendar-container glass-card" style="height: calc(100% - 75px); overflow-y: auto; display: flex; flex-direction: column;">
+              <div class="calendar-weekdays" style="margin-bottom: 8px;">
+                <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+              </div>
+              <div id="calendar-days-grid" class="calendar-days-grid" style="flex-grow: 1;">
+                <!-- Populated via Javascript -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Analytics Panel -->
+          <section id="panel-analytics" class="workspace-panel">
+            <div class="panel-header">
+              <h2>Learning Analytics</h2>
+              <p>Visualize your progress, study streak, and consistency.</p>
+            </div>
+            <div class="analytics-grid" style="height: calc(100% - 75px); overflow-y: auto;">
+              <!-- Progress Completion Ring -->
+              <div class="glass-card stat-card" style="margin-bottom: 15px;">
+                <h4>Task Completion Rate</h4>
+                <div class="radial-progress-container">
+                  <svg class="radial-progress-svg" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.06)" stroke-width="8" fill="transparent" />
+                    <circle id="completion-ring" cx="50" cy="50" r="40" stroke="var(--neon-cyan)" stroke-width="8" fill="transparent"
+                            stroke-dasharray="251.2" stroke-dashoffset="62.8" stroke-linecap="round" />
+                  </svg>
+                  <div id="completion-rate-text" class="radial-progress-text">75%</div>
+                </div>
+              </div>
+
+              <!-- Time Distribution -->
+              <div class="glass-card stat-card wide-card">
+                <h4>Study Hours Distribution</h4>
+                <div class="time-bars-container">
+                  <div class="time-bar-row">
+                    <span class="bar-label">Mathematics</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 68%;"></div></div>
+                    <span class="bar-value">14.5 hrs</span>
+                  </div>
+                  <div class="time-bar-row">
+                    <span class="bar-label">Science</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 48%;"></div></div>
+                    <span class="bar-value">9.8 hrs</span>
+                  </div>
+                  <div class="time-bar-row">
+                    <span class="bar-label">Computer Science</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 55%;"></div></div>
+                    <span class="bar-value">11.2 hrs</span>
+                  </div>
+                  <div class="time-bar-row">
+                    <span class="bar-label">Social Science</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 82%;"></div></div>
+                    <span class="bar-value">18.2 hrs</span>
+                  </div>
+                  <div class="time-bar-row">
+                    <span class="bar-label">English</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 40%;"></div></div>
+                    <span class="bar-value">8.4 hrs</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- Floating CosmoBot Widget -->
+      <div class="cosmobot-widget" id="cosmobot-widget" style="display: none;">
+        <!-- Floating Chat window -->
+        <div id="cosmobot-chat" class="cosmobot-chat">
+          <div class="chat-header" style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid rgba(59,130,246,0.15); background:rgba(59,130,246,0.03);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="cosmobot-avatar-wrapper small-avatar" style="position: relative; width: 42px; height: 42px; cursor: pointer; flex-shrink: 0;">
+                <img src="assets/ai/cosmobot.png" class="cosmobot-img" alt="CosmoBot Assistant" style="width: 100%; height: 100%; display: block;" />
+                <div class="cosmobot-eye eye-left" style="top: 20px; left: 15px; width: 3.5px; height: 3px;"></div>
+                <div class="cosmobot-eye eye-right" style="top: 20px; left: 23px; width: 3.5px; height: 3px;"></div>
+              </div>
+              <div class="chat-title-area" style="display: flex; flex-direction: column; gap: 2px;">
+                <h4 style="margin: 0; font-size: 0.9rem; font-weight: 700; color: #ffffff;">CosmoBot</h4>
+                <div class="status-row" style="display: flex; align-items: center; gap: 4px;">
+                  <span class="chat-status-dot" id="chat-status-dot" style="width: 6px; height: 6px;"></span>
+                  <span id="chat-voice-status" class="chat-voice-status" style="margin-left: 0; font-size: 0.68rem; color: var(--text-muted);">Online</span>
+                </div>
+              </div>
+            </div>
+            <div class="voice-toggle-container" style="margin-left: auto; display: flex; align-items: center; gap: 12px;">
+              <label class="voice-switch" title="Toggle Voice Response" style="position: relative; display: inline-block; width: 32px; height: 18px;">
+                <input type="checkbox" id="voice-toggle" checked />
+                <span class="voice-slider"></span>
+              </label>
+              <span id="close-chat" style="cursor: pointer; font-size: 1.1rem; opacity: 0.6; transition: opacity 0.2s; user-select: none; color: #cbd5e1;" title="Close Chat">✕</span>
+            </div>
+          </div>
+          <div id="chat-body" class="chat-body" style="flex-grow: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; max-height: none;">
+            <div class="chat-message bot">
+              <div class="message-content">Hello Cadet! I am CosmoBot, your AI study companion. Click a feature below or ask me anything!</div>
+              <span class="message-time">12:00 PM</span>
+            </div>
+          </div>
+          <div class="chat-actions-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; padding: 10px 16px; background: rgba(0, 0, 0, 0.25); border-top: 1px solid rgba(59, 130, 246, 0.15);">
+            <button class="chat-action-btn" data-action="doubts">❓ Ask Doubts</button>
+            <button class="chat-action-btn" data-action="reminders">⏰ Reminders</button>
+            <button class="chat-action-btn" data-action="homework">📝 Homework Help</button>
+            <button class="chat-action-btn" data-action="motivation">✨ Motivation</button>
+          </div>
+          <div class="chat-input-area" style="display: flex; border-top: 1px solid rgba(59, 130, 246, 0.15);">
+            <input id="chat-input" type="text" placeholder="Type your doubt or topic..." style="flex-grow: 1; background: transparent; border: none; padding: 12px 16px; color: #ffffff; font-size: 0.8rem; outline: none;" />
+            <button id="chat-mic" class="chat-mic-btn" title="Voice Input" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.15rem; padding: 0 8px; cursor: pointer;">🎤</button>
+            <button id="chat-send" style="background: var(--neon-blue); border: none; color: #ffffff; padding: 0 16px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">Send</button>
+          </div>
+        </div>
+
+        <!-- Floating avatar trigger button -->
+        <div class="cosmobot-avatar-trigger" id="cosmobot-trigger">
+          <div class="cosmobot-bubble" id="cosmobot-bubble" style="opacity: 0; pointer-events: none; transition: opacity 0.3s; user-select: none;">Need help with your mission, Cadet? Click me!</div>
+          <div class="cosmobot-avatar-wrapper" style="position: relative; width: 75px; height: 75px; flex-shrink: 0;">
+            <img src="assets/ai/cosmobot.png" class="cosmobot-img" id="cosmobot-img" alt="CosmoBot Assistant" style="width: 100%; height: 100%; display: block;" />
+            <div class="cosmobot-eye eye-left" style="top: 36px; left: 27px; width: 6px; height: 5px;"></div>
+            <div class="cosmobot-eye eye-right" style="top: 36px; left: 41px; width: 6px; height: 5px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
-  <!-- Firebase compat libs (no new project config created) -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-  <!-- 3D renderer for realistic galaxy (Three.js + postprocessing) -->
+  <!-- GSAP & Three.js Space Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="space-engine.js"></script>
+  <script>
+    // Capture the original currentUser before dashboard-3d.js loads and overwrites it
+    const originalUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    // Always force normal dashboard loading (disable transition delays/separate scenes)
+    localStorage.removeItem('showLaunchTransition');
+
+    // Intercept restoreDashboardAfterCrash to ensure all elements are visible on load
+    let _restoreFn = null;
+    Object.defineProperty(window, 'restoreDashboardAfterCrash', {
+      get() {
+        return function() {
+          if (_restoreFn) {
+            try {
+              _restoreFn();
+            } catch(e) {
+              console.warn("restoreFn failed:", e);
+            }
+          }
+          const dashContainer = document.querySelector('.dashboard-container');
+          const botWidget = document.getElementById('cosmobot-widget');
+          if (dashContainer) {
+            dashContainer.style.opacity = '1';
+            dashContainer.style.transform = 'none';
+            dashContainer.style.pointerEvents = 'all';
+          }
+          if (botWidget) {
+            botWidget.style.opacity = '1';
+            botWidget.style.transform = 'none';
+            botWidget.style.pointerEvents = 'all';
+          }
+        };
+      },
+      set(val) {
+        _restoreFn = val;
+      },
+      configurable: true
+    });
+
+    // Overwrite classPlanetMap to use the assigned destination academies
+    SpaceEngine.classPlanetMap = {
+      1: { name: 'mercury', title: 'Mercury Academy', theme: 'orange' },
+      2: { name: 'venus', title: 'Venus Academy', theme: 'yellow' },
+      3: { name: 'mars', title: 'Mars Academy', theme: 'red' },
+      4: { name: 'moon', title: 'Ceres Academy', theme: 'grey' },
+      5: { name: 'uranus', title: 'Europa Academy', theme: 'cyan' },
+      6: { name: 'jupiter', title: 'Ganymede Academy', theme: 'brown' },
+      7: { name: 'saturn', title: 'Titan Academy', theme: 'gold' },
+      8: { name: 'neptune', title: 'Neptune Academy', theme: 'blue' },
+      9: { name: 'uranus', title: 'Uranus Academy', theme: 'cyan' },
+      10: { name: 'saturn', title: 'Saturn Academy', theme: 'gold' },
+      11: { name: 'jupiter', title: 'Jupiter Academy', theme: 'brown' },
+      12: { name: 'jupiter', title: 'Jupiter Prime Academy', theme: 'cyan' }
+    };
+
+    // Override initDashboardScene to dynamically load the selected destination planet and moon configuration
+    SpaceEngine.initDashboardScene = function(passedPlanet, passedTheme) {
+      this.activeSceneType = 'dashboard';
+      this.camera.position.set(0, 0, 35);
+
+      const loader = new THREE.TextureLoader();
+      let currentScaleFactor = 1.0;
+
+      // Retrieve registered cadet profile details from originalUser
+      const userClass = parseInt(originalUser.class || '5', 10);
+      const choice = SpaceEngine.classPlanetMap[userClass] || SpaceEngine.classPlanetMap[5];
+      
+      // Load planet, theme, and destination directly from class mapping matching registration choice
+      const planetName = choice.name;
+      const theme = choice.theme;
+      const academyName = choice.title;
+
+      // Restore originalUser in localStorage and ensure it has correct synced values
+      originalUser.planet = planetName;
+      originalUser.theme = theme;
+      originalUser.destination = academyName;
+      localStorage.setItem('currentUser', JSON.stringify(originalUser));
+
+      // Dynamically display class badge and subtitle greetings
+      const badgeColors = {
+        orange: { bg: 'rgba(255, 165, 0, 0.15)', border: 'rgba(255, 165, 0, 0.3)', text: '#ffa500' },
+        yellow: { bg: 'rgba(255, 229, 127, 0.15)', border: 'rgba(255, 229, 127, 0.3)', text: '#ffe57f' },
+        red: { bg: 'rgba(239, 68, 68, 0.15)', border: 'rgba(239, 68, 68, 0.3)', text: '#fca5a5' },
+        grey: { bg: 'rgba(168, 173, 184, 0.15)', border: 'rgba(168, 173, 184, 0.3)', text: '#a8adb8' },
+        cyan: { bg: 'rgba(0, 240, 255, 0.12)', border: 'rgba(0, 240, 255, 0.25)', text: '#00f0ff' },
+        gold: { bg: 'rgba(255, 223, 0, 0.12)', border: 'rgba(255, 223, 0, 0.25)', text: '#ffdf00' },
+        blue: { bg: 'rgba(74, 166, 255, 0.12)', border: 'rgba(74, 166, 255, 0.25)', text: '#4aa6ff' },
+        brown: { bg: 'rgba(215, 204, 200, 0.15)', border: 'rgba(215, 204, 200, 0.3)', text: '#d7ccc8' }
+      };
+      const c = badgeColors[theme] || badgeColors.blue;
+      const badgeEl = document.getElementById('welcome-class-badge');
+      if (badgeEl) {
+        badgeEl.textContent = `Class ${userClass}`;
+        badgeEl.style.background = c.bg;
+        badgeEl.style.border = `1px solid ${c.border}`;
+        badgeEl.style.color = c.text;
+        badgeEl.style.display = 'inline-block';
+      }
+      const subtitleEl = document.getElementById('welcome-academy-subtitle');
+      if (subtitleEl) {
+        subtitleEl.innerHTML = `Keep exploring ${academyName}. Stay focused and keep learning! 🚀`;
+      }
+
+      // Clean up default lights to prevent duplicate lights or overexposure
+      const lightsToRemove = [];
+      this.scene.traverse((child) => {
+        if (child.isLight) lightsToRemove.push(child);
+      });
+      lightsToRemove.forEach(light => {
+        if (light.parent) {
+          light.parent.remove(light);
+        } else {
+          this.scene.remove(light);
+        }
+      });
+
+      // Uniform ambient lighting for consistent planet illumination with white light at 40% reduced brightness
+      const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+      this.scene.add(ambient);
+
+      // Hemisphere light for uniform brightness and soft fills from all sides
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.4);
+      this.scene.add(hemiLight);
+
+      // Planet configuration: textures, glow properties and material settings
+      const planetConfigs = {
+        mercury: { texture: 'assets/planets/mercury.png' },
+        venus:   { texture: 'assets/planets/venus.png' },
+        mars:    { texture: 'assets/planets/mars.png' },
+        saturn:  { texture: 'assets/planets/saturn.png' },
+        uranus:  { texture: 'assets/planets/uranus.png' },
+        neptune: { texture: 'assets/planets/neptune.png' },
+        jupiter: { texture: 'assets/planets/jupiter.png' },
+        moon:    { texture: 'assets/planets/moon.png' }
+      };
+
+      const config = planetConfigs[planetName] || planetConfigs.saturn;
+      const planetTex = loader.load(config.texture);
+      const maxAnisotropy = this.renderer.capabilities.getMaxAnisotropy();
+      planetTex.anisotropy = maxAnisotropy;
+      planetTex.wrapS = THREE.RepeatWrapping;
+      planetTex.wrapT = THREE.ClampToEdgeWrapping;
+
+      // 3D realistic exoplanet mesh creation
+      const planetRadius = 10.0;
+      const planetGeo = new THREE.SphereGeometry(planetRadius, 96, 96);
+      const planetMat = new THREE.MeshBasicMaterial({
+        map: planetTex,
+        color: 0x999999, // 40% reduced brightness (0.6 multiplier) for uniform shade
+        toneMapped: false
+      });
+
+      const planetMesh = new THREE.Mesh(planetGeo, planetMat);
+      planetMesh.position.set(10, 8, -25);
+      this.scene.add(planetMesh);
+
+      // Atmospheric Glow (Disabled to remove dual-colour lighting, blue/white sides, and colour overlays)
+      const glowMesh = null;
+
+      // Create and configure 3D Rocket model
+      const rocketGroup = SpaceEngine.create3DRocket(loader);
+      if (rocketGroup.userData.plasmaShield) rocketGroup.userData.plasmaShield.visible = false;
+      if (rocketGroup.userData.distortionMat && rocketGroup.userData.distortionMat.uniforms) {
+        rocketGroup.userData.distortionMat.uniforms.opacity.value = 0;
+      }
+      if (rocketGroup.userData.atmGlowMat) rocketGroup.userData.atmGlowMat.opacity = 0;
+      
+      // Hide initially
+      rocketGroup.visible = false;
+      this.scene.add(rocketGroup);
+
+      // Rocket animation state
+      const rocketAnimState = {
+        progress: 0,
+        flameIntensity: 1.0,
+        visible: false
+      };
+
+      // Trajectory function
+      const getRocketPosition = (progress) => {
+        // Starts hidden behind the planet, orbits around, then parks prograde
+        const thetaStart = 1.15 * Math.PI;
+        const thetaEnd = 2.15 * Math.PI;
+        const theta = thetaStart + (thetaEnd - thetaStart) * progress;
+        
+        const scaleFactor = currentScaleFactor;
+        const orbitR = 10.0 * scaleFactor * 1.35;
+        
+        const xRel = Math.sin(theta) * orbitR;
+        const zRel = Math.cos(theta) * orbitR;
+        
+        const tiltAngle = -20 * Math.PI / 180; // 20 degree tilt
+        const yRel = Math.sin(theta) * orbitR * Math.sin(tiltAngle) + (1.5 * scaleFactor);
+        
+        return new THREE.Vector3(
+          planetMesh.position.x + xRel,
+          planetMesh.position.y + yRel,
+          planetMesh.position.z + zRel
+        );
+      };
+
+      // GSAP Animation Timeline
+      gsap.delayedCall(0.5, () => {
+        rocketAnimState.visible = true;
+        rocketGroup.visible = true;
+        
+        gsap.to(rocketAnimState, {
+          progress: 1.0,
+          duration: 7.0,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            if (rocketAnimState.progress > 0.75) {
+              rocketAnimState.flameIntensity = (1.0 - rocketAnimState.progress) / 0.25;
+            }
+          },
+          onComplete: () => {
+            gsap.to(rocketAnimState, {
+              flameIntensity: 0.0,
+              duration: 1.0,
+              ease: "power1.out"
+            });
+          }
+        });
+      });
+
+      // Saturn Rings
+      let saturnRings = null;
+      if (planetName === 'saturn') {
+        const ringGeo = new THREE.RingGeometry(planetRadius * 1.3, planetRadius * 2.1, 64);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: 0x857458, // 40% reduced brightness
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.68
+        });
+        saturnRings = new THREE.Mesh(ringGeo, ringMat);
+        saturnRings.rotation.x = Math.PI / 2.3;
+        saturnRings.rotation.y = Math.PI / 8;
+        saturnRings.position.copy(planetMesh.position);
+        this.scene.add(saturnRings);
+      }
+
+      // Moon (All planets get an orbiting moon, except Neptune, Uranus, and Jupiter)
+      let moonPivot = null;
+      let moonMesh = null;
+
+      const noMoonPlanets = ['neptune', 'uranus', 'jupiter'];
+      if (!noMoonPlanets.includes(planetName)) {
+        moonPivot = new THREE.Group();
+        moonPivot.position.copy(planetMesh.position);
+        moonPivot.rotation.x = 0.15;
+        this.scene.add(moonPivot);
+
+        const moonGeo = new THREE.SphereGeometry(planetRadius * 0.1, 32, 32);
+        const moonMat = new THREE.MeshBasicMaterial({
+          map: loader.load('assets/planets/moon.png'),
+          color: 0x999999, // 40% reduced brightness for uniform shade
+          toneMapped: false
+        });
+        moonMesh = new THREE.Mesh(moonGeo, moonMat);
+        moonMesh.position.set(planetRadius * 2.2, 0, 0);
+        moonPivot.add(moonMesh);
+      }
+
+      this.scene.background = null;
+      this.createStarfield(1500);
+      this.createNebula();
+
+      // Particles
+      const particleCount = 120;
+      const particleGeo = new THREE.BufferGeometry();
+      const particlePos = new Float32Array(particleCount * 3);
+      const particleSpeeds = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount; i++) {
+        particlePos[i * 3] = planetMesh.position.x + (Math.random() - 0.5) * 40;
+        particlePos[i * 3 + 1] = planetMesh.position.y + (Math.random() - 0.5) * 40;
+        particlePos[i * 3 + 2] = planetMesh.position.z + (Math.random() - 0.5) * 40;
+        particleSpeeds[i * 3] = (Math.random() - 0.5) * 0.015;
+        particleSpeeds[i * 3 + 1] = (Math.random() - 0.5) * 0.015;
+        particleSpeeds[i * 3 + 2] = (Math.random() - 0.5) * 0.015;
+      }
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+      const particleMat = new THREE.PointsMaterial({ color: 0xa8dfff, size: 0.22, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
+      const floatingParticlesMesh = new THREE.Points(particleGeo, particleMat);
+      this.scene.add(floatingParticlesMesh);
+
+      this.resizeDashboardScene = () => {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const aspect = w / h;
+        const dist = this.camera.position.z + 25;
+        const fovRad = (this.camera.fov * Math.PI) / 360;
+        const visibleWidth = 2 * dist * Math.tan(fovRad) * aspect;
+        const planetPx = w * 0.35; // Sized to occupy exactly 35% of screen width (30%-40%)
+        const planetDiameter = (planetPx / w) * visibleWidth;
+        const scaleFactor = (planetDiameter / 2) / planetRadius;
+        currentScaleFactor = scaleFactor;
+        planetMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        if (glowMesh) glowMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        if (saturnRings) saturnRings.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        if (moonMesh) moonMesh.scale.set(scaleFactor, scaleFactor, scaleFactor);
+        if (rocketGroup) {
+          rocketGroup.scale.set(scaleFactor * 0.22, scaleFactor * 0.22, scaleFactor * 0.22);
+        }
+        
+        // Positioned on the right side behind chatbot card (offset is 0.5 to keep it on the far right)
+        planetMesh.position.set(visibleWidth / 2 - (planetDiameter / 2) - 0.5, 1.0, -25);
+        if (glowMesh) glowMesh.position.copy(planetMesh.position);
+        if (saturnRings) saturnRings.position.copy(planetMesh.position);
+        if (moonPivot) {
+          moonPivot.position.copy(planetMesh.position);
+          moonMesh.position.set(planetRadius * 2.2 * scaleFactor, 0, 0);
+        }
+      };
+      this.resizeDashboardScene();
+
+      let mouseX = 0, mouseY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+        mouseY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+      });
+
+      const tick = () => {
+        if (this.activeSceneType !== 'dashboard') return;
+        this.animId = requestAnimationFrame(tick);
+        const t = this.clock.getElapsedTime();
+        planetMesh.rotation.y = t * 0.02; // very slow smooth rotation
+        if (moonPivot) moonPivot.rotation.y = t * 0.04;
+        
+        // Update rocket position and prograde orientation
+        if (rocketGroup && rocketAnimState.visible) {
+          const progress = rocketAnimState.progress;
+          const pos = getRocketPosition(progress);
+          
+          // Next position for prograde vector calculation
+          const nextPos = getRocketPosition(progress + 0.002);
+          
+          // Tangent (velocity vector)
+          const tangent = new THREE.Vector3().subVectors(nextPos, pos).normalize();
+          
+          // Normal pointing away from planet center
+          const normal = new THREE.Vector3().subVectors(pos, planetMesh.position).normalize();
+          
+          // Binormal
+          const binormal = new THREE.Vector3().crossVectors(tangent, normal).normalize();
+          
+          // Corrected Normal
+          const correctedNormal = new THREE.Vector3().crossVectors(binormal, tangent).normalize();
+          
+          // Apply basis transformation (xAxis = binormal, yAxis = tangent, zAxis = correctedNormal)
+          const basisMatrix = new THREE.Matrix4().makeBasis(binormal, tangent, correctedNormal);
+          
+          rocketGroup.quaternion.setFromRotationMatrix(basisMatrix);
+          rocketGroup.position.copy(pos);
+          
+          // Animate flames opacity and point light intensity
+          const flameMat = rocketGroup.userData.flameMat;
+          const plumeLight = rocketGroup.userData.plumeLight;
+          if (flameMat) {
+            flameMat[0].opacity = 0.95 * rocketAnimState.flameIntensity;
+            flameMat[1].opacity = 0.85 * rocketAnimState.flameIntensity;
+            flameMat[2].opacity = 0.75 * rocketAnimState.flameIntensity;
+          }
+          if (plumeLight) {
+            plumeLight.intensity = 6.0 * rocketAnimState.flameIntensity;
+          }
+        }
+
+        if (floatingParticlesMesh) {
+          const positions = floatingParticlesMesh.geometry.attributes.position.array;
+          for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] += particleSpeeds[i * 3];
+            positions[i * 3 + 1] += particleSpeeds[i * 3 + 1];
+            positions[i * 3 + 2] += particleSpeeds[i * 3 + 2];
+            if (Math.abs(positions[i * 3] - planetMesh.position.x) > 20) positions[i * 3] = planetMesh.position.x - Math.sign(positions[i * 3] - planetMesh.position.x) * 20;
+          }
+          floatingParticlesMesh.geometry.attributes.position.needsUpdate = true;
+        }
+        this.camera.position.x += (mouseX * 2.0 - this.camera.position.x) * 0.045;
+        this.camera.position.y += (-mouseY * 1.5 - this.camera.position.y) * 0.045;
+        this.camera.lookAt(0, 0, 0);
+        this.renderer.render(this.scene, this.camera);
+      };
+      tick();
+
+      this.playLandingSequence = (onImpactCallback, onCompleteCallback) => {
+        if (onCompleteCallback) onCompleteCallback();
+      };
+
+      // Bind event listeners for the floating chatbot popup trigger
+      const trigger = document.getElementById('cosmobot-trigger');
+      const chat = document.getElementById('cosmobot-chat');
+      const bubble = document.getElementById('cosmobot-bubble');
+      
+      if (trigger && chat) {
+        // Show bubble on hover
+        trigger.addEventListener('mouseenter', () => {
+          if (!chat.classList.contains('active') && bubble) {
+            bubble.style.opacity = '1';
+          }
+        });
+        trigger.addEventListener('mouseleave', () => {
+          if (bubble) {
+            bubble.style.opacity = '0';
+          }
+        });
+
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isActive = chat.classList.contains('active');
+          if (isActive) {
+            chat.classList.remove('active');
+          } else {
+            chat.classList.add('active');
+            if (bubble) bubble.style.opacity = '0';
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput) chatInput.focus();
+          }
+        });
+        
+        chat.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+        
+        document.addEventListener('click', () => {
+          if (chat.classList.contains('active')) {
+            chat.classList.remove('active');
+          }
+        });
+      }
+    };
+  </script>
   <script src="dashboard-3d.js"></script>
-
-  <!-- Dashboard application logic -->
   <script src="dashboard.js" type="module"></script>
-
+  <script src="starfield-gen.js"></script>
 </body>
 </html>
