@@ -1,1 +1,0 @@
-console.log('login background script loaded');
