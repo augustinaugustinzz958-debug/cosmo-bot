@@ -1,43 +1,17 @@
-/* ================================================================
-   COSMOBOT — GLOBAL DESIGN SYSTEM
-   Premium Cinematic Space Theme
-   Inspired by: NASA Mission Control · Interstellar · Apple Vision Pro
-   ================================================================ */
-
+/* Base Reset and Variables */
 :root {
-  /* ── Core Palette ─────────────────────────────────────────────── */
-  --bg-dark: #0A0F1F;
-  --bg-darker: #070B16;
-  --bg-surface: #111827;
-
-  /* Accent Colors */
-  --accent-gold: #D4A017;
-  --accent-gold-light: #E8BE4E;
-  --accent-purple: #4C1D95;
-  --accent-cyan: #4dd0e1;    /* Used sparingly */
-  --silver: #C0C0C0;
-
-  /* Text */
-  --text-main: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #64748B;
-
-  /* Glass */
-  --glass-bg: rgba(17, 24, 39, 0.55);
-  --glass-border: rgba(212, 160, 23, 0.10);
-
+  /* Color Palette */
+  --bg-dark: #07090f;
+  --bg-darker: #040508;
+  --primary-cyan: #00f0ff;
+  --primary-purple: #8a2be2;
+  --text-main: #e0e6ed;
+  --text-muted: #8c9baf;
+  --glass-bg: rgba(16, 20, 31, 0.6);
+  --glass-border: rgba(0, 240, 255, 0.2);
+    
   /* Typography */
   --font-main: 'Outfit', sans-serif;
-
-  /* Glow Effects — soft, not neon */
-  --glow-gold: 0 0 20px rgba(212, 160, 23, 0.20);
-  --glow-purple: 0 0 15px rgba(76, 29, 149, 0.25);
-  --glow-silver: 0 0 12px rgba(192, 192, 192, 0.15);
-
-  /* Legacy aliases for backward compatibility */
-  --primary-cyan: #4dd0e1;
-  --primary-purple: #4C1D95;
-  --glow-cyan: 0 0 12px rgba(77, 208, 225, 0.15);
 }
 
 * {
@@ -50,359 +24,197 @@ body {
   font-family: var(--font-main);
   background-color: var(--bg-darker);
   color: var(--text-main);
-  overflow: hidden;
+  overflow: hidden; /* Hide scrollbars for full-screen canvas */
   height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ================================================================
-   DEEP SPACE STARFIELD BACKGROUND
-   Warm-toned stars with subtle golden highlights
-   ================================================================ */
-
-.starfield-layer {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Layer 1: Distant faint stars */
-.stars-sm {
-  width: 1px;
-  height: 1px;
-  background: transparent;
-  box-shadow:
-    42px 78px rgba(248,250,252,0.7), 190px 340px rgba(248,250,252,0.5),
-    520px 120px rgba(192,192,192,0.6), 780px 640px rgba(248,250,252,0.5),
-    1100px 200px rgba(248,250,252,0.6), 1340px 500px rgba(192,192,192,0.5),
-    200px 720px rgba(248,250,252,0.5), 600px 900px rgba(248,250,252,0.4),
-    850px 80px rgba(212,160,23,0.3), 1200px 700px rgba(248,250,252,0.5),
-    340px 400px rgba(248,250,252,0.6), 900px 320px rgba(192,192,192,0.5),
-    1400px 120px rgba(248,250,252,0.5), 60px 500px rgba(248,250,252,0.4),
-    460px 660px rgba(192,192,192,0.5), 1000px 450px rgba(248,250,252,0.6),
-    150px 180px rgba(248,250,252,0.5), 700px 530px rgba(212,160,23,0.25),
-    1300px 350px rgba(248,250,252,0.5), 400px 820px rgba(248,250,252,0.4),
-    1050px 600px rgba(192,192,192,0.5), 250px 950px rgba(248,250,252,0.5),
-    800px 150px rgba(248,250,252,0.6), 1150px 850px rgba(192,192,192,0.4),
-    50px 300px rgba(248,250,252,0.5), 550px 750px rgba(248,250,252,0.4),
-    950px 950px rgba(212,160,23,0.2), 1250px 50px rgba(248,250,252,0.5),
-    350px 590px rgba(248,250,252,0.5), 750px 400px rgba(192,192,192,0.5),
-    100px 860px rgba(248,250,252,0.4), 500px 230px rgba(248,250,252,0.5),
-    870px 700px rgba(192,192,192,0.5), 1180px 440px rgba(248,250,252,0.5),
-    280px 130px rgba(248,250,252,0.4), 680px 980px rgba(212,160,23,0.2),
-    1080px 80px rgba(248,250,252,0.5), 30px 680px rgba(248,250,252,0.4),
-    430px 390px rgba(192,192,192,0.5), 830px 560px rgba(248,250,252,0.5),
-    1380px 780px rgba(248,250,252,0.4), 160px 430px rgba(212,160,23,0.2);
-  animation: starsTwinkle1 6s ease-in-out infinite alternate;
-}
-
-/* Layer 2: Medium brightness stars */
-.stars-md {
-  width: 1.5px;
-  height: 1.5px;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow:
-    120px 220px rgba(248,250,252,0.7), 380px 80px rgba(192,192,192,0.6),
-    680px 450px rgba(248,250,252,0.7), 950px 760px rgba(212,160,23,0.35),
-    1200px 180px rgba(248,250,252,0.6), 210px 600px rgba(192,192,192,0.5),
-    530px 340px rgba(248,250,252,0.6), 860px 900px rgba(192,192,192,0.5),
-    1100px 420px rgba(248,250,252,0.6), 70px 770px rgba(192,192,192,0.5),
-    400px 150px rgba(248,250,252,0.7), 730px 580px rgba(212,160,23,0.3),
-    1050px 250px rgba(248,250,252,0.6), 300px 870px rgba(192,192,192,0.5),
-    620px 730px rgba(248,250,252,0.6), 940px 100px rgba(192,192,192,0.6),
-    1280px 630px rgba(248,250,252,0.6), 160px 370px rgba(192,192,192,0.5),
-    470px 520px rgba(248,250,252,0.7), 780px 200px rgba(212,160,23,0.3),
-    1150px 850px rgba(248,250,252,0.5), 50px 460px rgba(192,192,192,0.5),
-    340px 690px rgba(248,250,252,0.6), 650px 30px rgba(192,192,192,0.5);
-  animation: starsTwinkle2 8s ease-in-out infinite alternate;
-}
-
-/* Layer 3: Bright foreground stars with warm halos */
-.stars-lg {
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: transparent;
-  box-shadow:
-    250px 300px 1px 0 rgba(248,250,252,0.8),
-    680px 180px 1px 0 rgba(192,192,192,0.7),
-    1100px 650px 2px 0 rgba(212,160,23,0.5),
-    440px 780px 1px 0 rgba(248,250,252,0.7),
-    850px 420px 1px 0 rgba(192,192,192,0.7),
-    1300px 350px 2px 0 rgba(248,250,252,0.6),
-    180px 950px 1px 0 rgba(212,160,23,0.4),
-    560px 530px 1px 0 rgba(248,250,252,0.8),
-    970px 850px 1px 0 rgba(192,192,192,0.6),
-    1200px 100px 2px 0 rgba(248,250,252,0.7),
-    380px 200px 1px 0 rgba(212,160,23,0.4),
-    750px 700px 1px 0 rgba(248,250,252,0.7),
-    100px 480px 1px 0 rgba(192,192,192,0.6),
-    500px 90px 1px 0 rgba(248,250,252,0.7),
-    900px 600px 2px 0 rgba(212,160,23,0.45);
-  animation: starsTwinkle3 10s ease-in-out infinite alternate;
-}
-
-/* Subtle cosmic nebula wash — deep purples and warm undertones */
-.nebula-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 15% 25%, rgba(76, 29, 149, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 75%, rgba(17, 24, 39, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 55% 85%, rgba(76, 29, 149, 0.05) 0%, transparent 45%),
-    radial-gradient(ellipse at 75% 15%, rgba(212, 160, 23, 0.03) 0%, transparent 35%);
-  animation: nebulaDrift 40s ease-in-out infinite alternate;
-}
-
-/* Twinkling — slow, cinematic pacing */
-@keyframes starsTwinkle1 {
-  0%   { opacity: 0.4; }
-  50%  { opacity: 0.7; }
-  100% { opacity: 0.5; }
-}
-
-@keyframes starsTwinkle2 {
-  0%   { opacity: 0.5; }
-  50%  { opacity: 0.8; }
-  100% { opacity: 0.6; }
-}
-
-@keyframes starsTwinkle3 {
-  0%   { opacity: 0.6; }
-  50%  { opacity: 0.9; }
-  100% { opacity: 0.65; }
-}
-
-@keyframes nebulaDrift {
-  0%   { transform: scale(1) rotate(0deg); opacity: 0.7; }
-  50%  { transform: scale(1.03) rotate(0.5deg); opacity: 0.9; }
-  100% { transform: scale(1) rotate(-0.5deg); opacity: 0.75; }
-}
-
-/* ── 3D Canvas Container ──────────────────────────────────────── */
-#galaxy-container {
+/* 3D Background Canvas */
+#space-canvas {
   position: absolute;
-  inset: 0;
-  z-index: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  z-index: 0;
 }
 
-/* ── Page Transition Overlay ──────────────────────────────────── */
-.transition-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: var(--bg-darker);
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 1;
-  will-change: opacity;
-  transition: opacity 0.9s ease;
-}
-
-/* ================================================================
-   GLASSMORPHIC CARD — Auth pages
-   ================================================================ */
-.auth-card {
+/* Main Content Overlay */
+.content-container {
   position: relative;
   z-index: 10;
   width: 90%;
-  max-width: 440px;
-  padding: 2.2rem;
+  max-width: 700px;
+  padding: 2rem;
+  animation: fadeIn 1.5s ease-out forwards;
+}
+
+/* Glassmorphism Card */
+.intro-glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px) saturate(120%);
-  -webkit-backdrop-filter: blur(20px) saturate(120%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  box-shadow:
-    0 15px 45px rgba(0, 0, 0, 0.65),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    inset 0 0 20px rgba(212, 160, 23, 0.02);
-  animation: cardFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  border-radius: 24px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.05);
 }
 
-.auth-card:hover {
-  border-color: rgba(212, 160, 23, 0.18);
-  box-shadow:
-    0 15px 50px rgba(0, 0, 0, 0.7),
-    0 0 12px rgba(212, 160, 23, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-/* ── Typography ────────────────────────────────────────────────── */
-h1 {
-  font-size: 2.2rem;
+/* Typography Styles */
+.logo-title {
+  font-size: 4rem;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  color: var(--text-main);
-  text-shadow: none;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  letter-spacing: 2px;
 }
 
-h1 span {
-  color: var(--accent-gold);
-  text-shadow: 0 0 18px rgba(212, 160, 23, 0.25);
+.logo-title span {
+  color: var(--primary-cyan);
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
 }
 
-p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-/* ── Form Controls ─────────────────────────────────────────────── */
-label {
-  display: block;
-  font-size: 0.72rem;
+.tagline {
+  font-size: 1.5rem;
   font-weight: 600;
-  letter-spacing: 1.2px;
+  color: var(--primary-purple);
+  margin-bottom: 1.5rem;
   text-transform: uppercase;
-  margin-top: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.description {
+  font-size: 1.1rem;
+  font-weight: 300;
+  line-height: 1.6;
   color: var(--text-muted);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-input, select, textarea {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  margin-top: 0.4rem;
-  border-radius: 10px;
-  border: 1px solid rgba(192, 192, 192, 0.12);
-  background: rgba(17, 24, 39, 0.6);
-  color: var(--text-main);
-  font-family: inherit;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: rgba(212, 160, 23, 0.4);
-  box-shadow: 0 0 12px rgba(212, 160, 23, 0.12);
-  background: rgba(17, 24, 39, 0.8);
-}
-
-/* ── Buttons ───────────────────────────────────────────────────── */
+/* Call to Action Buttons (Control Panels) */
 .cta-container {
   display: flex;
-  gap: 1.2rem;
-  margin-top: 2.2rem;
-  width: 100%;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
-.btn {
+.control-panel-btn {
+  position: relative;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  color: var(--text-main);
+  font-family: var(--font-main);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.btn-text {
+  position: relative;
+  z-index: 2;
+}
+
+.btn-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, var(--primary-cyan) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  z-index: 1;
+}
+
+.control-panel-btn:hover {
+  border-color: var(--primary-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.control-panel-btn:hover .btn-glow {
+  width: 300px;
+  height: 300px;
+  opacity: 0.2;
+}
+
+.signup-btn {
+  border-color: var(--primary-purple);
+}
+
+.signup-btn .btn-glow {
+  background: radial-gradient(circle, var(--primary-purple) 0%, transparent 70%);
+}
+
+.signup-btn:hover {
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+}
+
+/* Highlight CTAs with bright gradient to improve visibility */
+.control-panel-btn {
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.8rem 1.6rem;
-  border-radius: 12px;
-  border: 1px solid rgba(212, 160, 23, 0.15);
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 0.88rem;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  text-decoration: none;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  width: 100%;
-  background: rgba(17, 24, 39, 0.5);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
-  position: relative;
-  overflow: hidden;
-  color: var(--text-main);
+  gap: 0.5rem;
 }
 
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 14px;
-  pointer-events: none;
-  background: linear-gradient(120deg, rgba(212, 160, 23, 0.04), rgba(76, 29, 149, 0.02));
-  filter: blur(8px);
-  opacity: 0;
-  transition: opacity 0.4s ease;
+.control-panel-btn.login-btn {
+  background: linear-gradient(90deg,#6ee7b7,#4fd1c5); /* cyan-green */
+  color: #042018;
+  border: none;
+  box-shadow: 0 10px 30px rgba(79,209,197,0.12), 0 2px 6px rgba(0,0,0,0.45);
 }
 
-.btn:hover::after {
-  opacity: 1;
+.control-panel-btn.login-btn .btn-glow {
+  background: radial-gradient(circle, rgba(110,231,183,0.9) 0%, transparent 60%);
 }
 
-/* Gold-accent primary button */
-.btn-cyan {
-  background: linear-gradient(135deg, #b8860b, var(--accent-gold));
-  color: var(--bg-darker);
-  border-color: rgba(212, 160, 23, 0.3);
-  box-shadow: 0 4px 15px rgba(212, 160, 23, 0.15);
+.control-panel-btn.login-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 50px rgba(79,209,197,0.18), 0 4px 12px rgba(0,0,0,0.5);
+  color: #001214;
 }
 
-.btn-cyan:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 160, 23, 0.25);
-  border-color: rgba(212, 160, 23, 0.5);
+.control-panel-btn.signup-btn {
+  background: linear-gradient(90deg,#a78bfa,#8a2be2); /* purple */
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 10px 30px rgba(138,43,226,0.12), 0 2px 6px rgba(0,0,0,0.45);
 }
 
-/* Glass outlined button */
-.btn-purple {
-  background: rgba(76, 29, 149, 0.12);
-  color: var(--text-secondary);
-  border-color: rgba(192, 192, 192, 0.12);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.control-panel-btn.signup-btn .btn-glow {
+  background: radial-gradient(circle, rgba(138,43,226,0.9) 0%, transparent 60%);
 }
 
-.btn-purple:hover {
-  transform: translateY(-2px);
-  background: rgba(76, 29, 149, 0.18);
-  border-color: rgba(192, 192, 192, 0.2);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+.control-panel-btn.signup-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 50px rgba(138,43,226,0.18), 0 4px 12px rgba(0,0,0,0.5);
+  color: #fff;
 }
 
-.btn:focus {
-  box-shadow: 0 0 20px rgba(212, 160, 23, 0.1), 0 8px 25px rgba(0, 0, 0, 0.4);
-  transform: translateY(-2px) scale(1.01);
-}
-
-/* Pulse effect — gold-toned */
-.btn.pulse {
-  animation: btnPulse 3.5s infinite ease-in-out;
-}
-
-@keyframes btnPulse {
-  0%   { box-shadow: 0 4px 15px rgba(212, 160, 23, 0.08); }
-  50%  { box-shadow: 0 8px 25px rgba(212, 160, 23, 0.15); transform: translateY(-1px); }
-  100% { box-shadow: 0 4px 15px rgba(212, 160, 23, 0.08); }
-}
-
-/* ── Countdown HUD ────────────────────────────────────────────── */
-#countdown-hud {
-  font-family: var(--font-main);
-  letter-spacing: 4px;
-  -webkit-font-smoothing: antialiased;
-  display: none;
-}
-
-.btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* ── Animations ────────────────────────────────────────────────── */
-@keyframes cardFadeIn {
+/* Animations */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(22px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -410,10 +222,22 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
-/* ── Responsive ────────────────────────────────────────────────── */
+/* Responsive Design */
 @media (max-width: 768px) {
-  .auth-card {
-    padding: 1.6rem;
-    margin: 1rem;
+  .intro-glass-card {
+    padding: 2rem 1.5rem;
+  }
+  .logo-title {
+    font-size: 3rem;
+  }
+  .tagline {
+    font-size: 1.2rem;
+  }
+  .cta-container {
+    flex-direction: column;
+  }
+  .control-panel-btn {
+    width: 100%;
   }
 }
+

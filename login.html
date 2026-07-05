@@ -11,76 +11,52 @@
   <link rel="stylesheet" href="login.css">
 </head>
 <body>
-  <!-- CSS Multi-layer Starfield Background -->
-  <div class="starfield-layer stars-sm"></div>
-  <div class="starfield-layer stars-md"></div>
-  <div class="starfield-layer stars-lg"></div>
-  <div class="nebula-overlay"></div>
+  <!-- 3D Space Background canvas -->
+  <div id="galaxy-container" aria-hidden="true"></div>
 
-  <!-- Three.js Space Engine Container -->
-  <div id="galaxy-container"></div>
-
-  <!-- Fullscreen Transition Overlay -->
-  <div class="transition-overlay"></div>
-
-
-
-  <!-- Glassmorphism Login console -->
   <main class="auth-card" role="main">
-    <h1 style="margin:0 0 8px">Access Console</h1>
-    <p style="margin:0 0 20px;color:#bcd3e6">Initiate connection credentials to verify account</p>
+    <h1 style="margin:0 0 8px">Welcome back</h1>
+    <p style="margin:0 0 20px;color:#bcd3e6">Sign in to continue to CosmoBot</p>
     <form id="loginForm">
-      <label for="email">Cadet Email</label>
-      <input id="email" name="email" type="email" required autocomplete="email" placeholder="enter registered email..." />
-      <label for="password">Security Key</label>
-      <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="enter password key..." />
-      
-      <div class="cta-container" style="margin-top: 2rem;">
-        <button id="submitBtn" class="btn btn-cyan" type="submit">Verify Credentials</button>
-      </div>
-      <div style="margin-top: 1.2rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
-        Not registered yet? <a href="register.html" style="color: var(--primary-cyan); text-decoration: none; font-weight: 700; margin-left: 6px;">Enroll Cadet</a>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" required autocomplete="current-password" />
+      <div class="actions">
+        <button class="btn" type="submit">Login</button>
+        <div class="muted">Don't have an account?<a href="register.html" style="color:#6ee7b7;margin-left:8px;text-decoration:none">Register</a></div>
       </div>
     </form>
   </main>
-
-  <!-- Libraries & Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="space-engine.js"></script>
-  <script src="login-bg.js"></script>
   <script>
-    // Handle form submit credential actions
     document.getElementById('loginForm').addEventListener('submit', async function(e){
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const submitBtn = document.getElementById('submitBtn');
-
       if(!email || !password){ alert('Please enter email and password'); return; }
 
-      submitBtn.disabled = true;
-
-      // Mock LocalStorage user fallback persistence
-      const registered = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      if (registered.email !== email) {
-        localStorage.setItem('currentUser', JSON.stringify({ 
-          displayName: email.split('@')[0], 
-          email: email,
-          class: registered.class || 5, // Default class if not set
-          destination: registered.destination || 'Earth Orbit Academy'
-        }));
+      // If Firebase is available, sign in and redirect to dashboard
+      if(window.firebase && firebase.auth){
+        try{
+          await firebase.auth().signInWithEmailAndPassword(email, password);
+          window.location.href = 'dashboard.html';
+        }catch(err){
+          alert(err.message || 'Login failed');
+        }
+        return;
       }
 
-      // Smooth acceleration transition toward destination
-      SpaceEngine.transitionTo('dashboard.html', (timeline) => {
-        // Accelerate space travel lines
-        if (SpaceEngine.loginElements && SpaceEngine.loginElements.accelerate) {
-          SpaceEngine.loginElements.accelerate(timeline);
-        }
-      });
+      // Fallback demo behavior: redirect to dashboard
+      const registered = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      if (registered.email !== email) {
+        localStorage.setItem('currentUser', JSON.stringify({ displayName: email.split('@')[0], email: email }));
+      }
+      alert('Login successful! Redirecting to dashboard.');
+      window.location.href = 'dashboard.html';
     });
   </script>
-  <script src="starfield-gen.js"></script>
+  <!-- Three.js + Space BG Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="login-bg.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* Premium space theme styling for Login page */
+/* Premium space theme styling for Auth pages (Login & Register) */
 :root {
   --glass-bg: rgba(6, 10, 20, 0.55);
   --glass-border: rgba(0, 240, 255, 0.18);
@@ -40,6 +40,10 @@ body {
   margin: 20px;
 }
 
+.auth-card.register-card {
+  max-width: 520px;
+}
+
 .auth-card:hover {
   border-color: rgba(0, 240, 255, 0.3);
   box-shadow: 0 16px 45px rgba(2, 6, 23, 0.75), 0 0 30px rgba(0, 240, 255, 0.14);
@@ -73,7 +77,7 @@ label {
   opacity: 0.85;
 }
 
-input {
+input, select {
   width: 100%;
   padding: 11px 14px;
   margin-top: 6px;
@@ -86,11 +90,23 @@ input {
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-input:focus {
+input:focus, select:focus {
   outline: none;
   border-color: var(--neon-cyan);
   box-shadow: 0 0 8px rgba(0, 240, 255, 0.25);
   background: rgba(0, 240, 255, 0.02);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Actions panel & buttons */
@@ -120,13 +136,20 @@ input:focus {
   box-shadow: 0 6px 20px rgba(0, 240, 255, 0.45);
 }
 
-.muted {
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.muted, .note {
   color: #8c9baf;
   font-size: 0.82rem;
   font-weight: 600;
 }
 
-.muted a {
+.muted a, .note a {
   color: var(--neon-cyan);
   margin-left: 6px;
   text-decoration: none;
@@ -134,7 +157,7 @@ input:focus {
   transition: text-shadow 0.2s ease;
 }
 
-.muted a:hover {
+.muted a:hover, .note a:hover {
   text-shadow: 0 0 8px rgba(0, 240, 255, 0.7);
 }
 

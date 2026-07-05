@@ -3,351 +3,47 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Register Cadet — CosmoBot</title>
+  <title>Register — CosmoBot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="register.css">
-  <style>
-    /* Premium Color Palette & Typography Overrides */
-    body {
-      background: radial-gradient(circle at center, #0B1A2E 0%, #07111F 100%) !important;
-      color: #FFFFFF !important;
-      font-family: 'Outfit', sans-serif !important;
-    }
-    
-    /* Remove arcade/gaming style nebula overlay and neon blobs */
-    .nebula-overlay {
-      display: none !important;
-    }
-
-    /* Glassmorphism Card Style */
-    .register-card {
-      background: rgba(255, 255, 255, 0.08) !important;
-      border: 1px solid rgba(255, 255, 255, 0.12) !important;
-      backdrop-filter: blur(16px) !important;
-      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4) !important;
-      border-radius: 20px !important;
-      padding: 2.5rem !important;
-    }
-
-    .register-card h1 {
-      color: #FFFFFF !important;
-      font-weight: 800 !important;
-    }
-
-    .register-card p {
-      color: #CBD5E1 !important;
-    }
-
-    /* Premium Class Dropdown & Form Fields */
-    label {
-      color: #CBD5E1 !important;
-      font-weight: 600 !important;
-      font-size: 0.85rem !important;
-      letter-spacing: 0.5px !important;
-      margin-bottom: 6px !important;
-    }
-
-    input, select {
-      background: rgba(11, 26, 46, 0.9) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-      color: #FFFFFF !important;
-      border-radius: 8px !important;
-      padding: 12px 16px !important;
-      font-size: 0.95rem !important;
-      font-family: 'Outfit', sans-serif !important;
-      transition: all 0.3s ease !important;
-      outline: none !important;
-      box-sizing: border-box !important;
-      width: 100% !important;
-    }
-
-    input:focus, select:focus {
-      border-color: #3B82F6 !important;
-      box-shadow: 0 0 12px rgba(59, 130, 246, 0.5) !important;
-      background: rgba(255, 255, 255, 0.12) !important;
-    }
-
-    select, select option {
-      background-color: #07111F !important;
-      color: #FFFFFF !important;
-      font-weight: 600 !important;
-    }
-
-    select option:disabled {
-      color: rgba(255, 255, 255, 0.6) !important;
-    }
-
-    /* Verify & Launch Button */
-    .btn-cyan {
-      background: #3B82F6 !important;
-      color: #FFFFFF !important;
-      border-radius: 8px !important;
-      padding: 14px 28px !important;
-      font-weight: 800 !important;
-      font-family: 'Outfit', sans-serif !important;
-      border: none !important;
-      transition: all 0.3s ease !important;
-      letter-spacing: 1px !important;
-      text-transform: uppercase !important;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2) !important;
-    }
-
-    .btn-cyan:hover {
-      background: #60A5FA !important;
-      box-shadow: 0 0 20px rgba(96, 165, 250, 0.5) !important;
-      transform: translateY(-1px) !important;
-    }
-
-    .btn-cyan:disabled {
-      background: rgba(255, 255, 255, 0.12) !important;
-      color: rgba(255, 255, 255, 0.35) !important;
-      box-shadow: none !important;
-      cursor: not-allowed !important;
-    }
-
-    /* Destination Card & Projector styling overrides */
-    .hologram-box {
-      background: rgba(255, 255, 255, 0.03) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-shadow: inset 0 0 25px rgba(255, 255, 255, 0.02), 0 0 15px rgba(59, 130, 246, 0.05) !important;
-      animation: holoBlueGlow 4s ease-in-out infinite alternate !important;
-      border-radius: 16px !important;
-    }
-
-    /* Scanline override */
-    .hologram-box::before {
-      background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(59, 130, 246, 0.02) 50%
-      ) !important;
-      background-size: 100% 4px !important;
-      opacity: 0.5 !important;
-    }
-
-    @keyframes holoBlueGlow {
-      from {
-        border-color: rgba(59, 130, 246, 0.12) !important;
-        box-shadow: inset 0 0 25px rgba(59, 130, 246, 0.02), 0 0 10px rgba(59, 130, 246, 0.04) !important;
-      }
-      to {
-        border-color: rgba(59, 130, 246, 0.25) !important;
-        box-shadow: inset 0 0 35px rgba(59, 130, 246, 0.06), 0 0 20px rgba(59, 130, 246, 0.12) !important;
-      }
-    }
-
-    .hologram-projector-node {
-      background: linear-gradient(90deg, #07111F, #3B82F6, #07111F) !important;
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3) !important;
-      border-radius: 5px !important;
-    }
-
-    .hologram-rays {
-      background: conic-gradient(from 165deg at 50% 100%, rgba(59, 130, 246, 0.08) 0deg, transparent 30deg) !important;
-    }
-
-    .hologram-destination {
-      color: #FFFFFF !important;
-      text-shadow: 0 0 12px rgba(59, 130, 246, 0.4) !important;
-      font-weight: 800 !important;
-      font-size: 1.1rem !important;
-      letter-spacing: 0.5px !important;
-    }
-
-    .hologram-header {
-      color: #CBD5E1 !important;
-      font-weight: 600 !important;
-      font-size: 0.7rem !important;
-    }
-  </style>
 </head>
 <body>
-  <!-- CSS Multi-layer Starfield Background -->
-  <div class="starfield-layer stars-sm"></div>
-  <div class="starfield-layer stars-md"></div>
-  <div class="starfield-layer stars-lg"></div>
-  <div class="nebula-overlay"></div>
+  <!-- 3D Space Background canvas -->
+  <div id="galaxy-container" aria-hidden="true"></div>
 
-  <!-- Three.js Space Engine Container -->
-  <div id="galaxy-container"></div>
-
-  <!-- Fullscreen Transition Overlay -->
-  <div class="transition-overlay"></div>
-
-  <!-- Cadet Enrollment Card Container -->
-  <main class="auth-card register-card" role="main">
-    
-    <!-- Left Column: Registration Inputs -->
-    <div>
-      <h1 style="margin:0 0 4px">Enroll Cadet</h1>
-      <p style="margin:0 0 16px;color:#9fb9d0">Create secure flight profile keys to register</p>
-      
-      <form id="registerForm">
-        <label for="name">Cadet Name</label>
-        <input id="name" name="name" type="text" required placeholder="enter full name..." />
-        
-        <div class="row">
-          <div>
-            <label for="age">Age (1-25)</label>
-            <input id="age" name="age" type="number" min="1" max="25" required placeholder="age..." />
-          </div>
-          <div>
-            <label for="classField">Class (1-12)</label>
-            <select id="classField" name="class" required>
-              <option value="" disabled selected>Select class...</option>
-              <option value="1">Class 1 (Grade 1)</option>
-              <option value="2">Class 2 (Grade 2)</option>
-              <option value="3">Class 3 (Grade 3)</option>
-              <option value="4">Class 4 (Grade 4)</option>
-              <option value="5">Class 5 (Grade 5)</option>
-              <option value="6">Class 6 (Grade 6)</option>
-              <option value="7">Class 7 (Grade 7)</option>
-              <option value="8">Class 8 (Grade 8)</option>
-              <option value="9">Class 9 (Grade 9)</option>
-              <option value="10">Class 10 (Grade 10)</option>
-              <option value="11">Class 11 (Grade 11)</option>
-              <option value="12">Class 12 (Grade 12)</option>
-            </select>
-          </div>
+  <main class="auth-card register-card">
+    <h1 style="margin:0 0 8px">Create account</h1>
+    <p style="margin:0 0 14px;color:#9fb9d0">Fill in your details to register an account.</p>
+    <form id="registerForm">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" required />
+      <div class="row">
+        <div>
+          <label for="age">Age (1-25)</label>
+          <input id="age" name="age" type="number" min="1" max="25" required />
         </div>
-        
-        <label for="email">Flight Email</label>
-        <input id="email" name="email" type="email" required autocomplete="email" placeholder="cadet@academy.com..." />
-        
-        <div class="row">
-          <div>
-            <label for="password">Security Key</label>
-            <input id="password" name="password" type="password" minlength="8" required placeholder="password..." />
-          </div>
-          <div>
-            <label for="confirmPassword">Verify Key</label>
-            <input id="confirmPassword" name="confirmPassword" type="password" required placeholder="confirm..." />
-          </div>
+        <div>
+          <label for="classField">Class (1-12)</label>
+          <input id="classField" name="class" type="number" min="1" max="12" required />
         </div>
-        
-        <!-- Validation feedback alert box -->
-        <div id="pwdMessage" style="color:#ff8a8a;margin-top:14px;font-size:0.8rem;min-height:20px;" aria-live="polite"></div>
-        
-        <div class="cta-container" style="margin-top: 1.2rem;">
-          <button id="registerBtn" class="btn btn-cyan" type="submit">Verify & Launch</button>
-        </div>
-        <div style="margin-top: 1rem; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
-          Already enrolled? <a href="login.html" style="color: #3B82F6; text-decoration: none; font-weight: 700; margin-left: 6px;">Access Console</a>
-        </div>
-      </form>
-    </div>
-
-    <!-- Right Column: Hologram Projector Screen -->
-    <div class="hologram-box" aria-hidden="true">
-      <div class="hologram-rays"></div>
-      
-      <!-- Mount point for 3D spinning hologram planet -->
-      <div id="hologram-viewport">
-        <!-- Render fallback text if WebGL not ready -->
-        <div style="color:rgba(59, 130, 246, 0.5); text-align:center; padding-top:4.5rem; font-size:0.85rem;">[ awaiting coordinates ]</div>
       </div>
-      
-      <div class="hologram-projector-node"></div>
-      
-      <div class="hologram-meta">
-        <div class="hologram-header">DESTINATION VECTOR</div>
-        <div id="dest-name" class="hologram-destination">Awaiting Class...</div>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special char" />
+      <label for="confirmPassword">Confirm Password</label>
+      <input id="confirmPassword" name="confirmPassword" type="password" required />
+      <div id="pwdMessage" style="color:#ff8a8a;margin-top:8px" aria-live="polite"></div>
+      <div class="actions">
+        <button id="registerBtn" class="btn" type="submit">Register</button>
+        <div class="note">Back to <a href="login.html" style="color:#6ee7b7;text-decoration:none;margin-left:6px">Login</a></div>
       </div>
-    </div>
-
+    </form>
   </main>
-
-  <!-- Libraries & Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="space-engine.js"></script>
-  <script src="register-bg.js"></script>
   <script>
-    // Overwrite classPlanetMap to use assigned academy designations (remove Earth Academy)
-    SpaceEngine.classPlanetMap = {
-      1: { name: 'mercury', title: 'Mercury Academy', theme: 'orange' },
-      2: { name: 'venus', title: 'Venus Academy', theme: 'yellow' },
-      3: { name: 'mars', title: 'Mars Academy', theme: 'red' },
-      4: { name: 'moon', title: 'Ceres Academy', theme: 'grey' },
-      5: { name: 'uranus', title: 'Europa Academy', theme: 'cyan' },
-      6: { name: 'jupiter', title: 'Ganymede Academy', theme: 'brown' },
-      7: { name: 'saturn', title: 'Titan Academy', theme: 'gold' },
-      8: { name: 'neptune', title: 'Neptune Academy', theme: 'blue' },
-      9: { name: 'uranus', title: 'Uranus Academy', theme: 'cyan' },
-      10: { name: 'saturn', title: 'Saturn Academy', theme: 'gold' },
-      11: { name: 'jupiter', title: 'Jupiter Academy', theme: 'brown' },
-      12: { name: 'jupiter', title: 'Jupiter Prime Academy', theme: 'cyan' }
-    };
-
-    // Overwrite createHologramPlanet to render a realistic, solid 3D planet
-    SpaceEngine.createHologramPlanet = function(planetName, containerId) {
-      const parent = document.getElementById(containerId);
-      if (!parent) return;
-      
-      parent.innerHTML = '';
-
-      const w = parent.clientWidth || 180;
-      const h = parent.clientHeight || 180;
-
-      const holoScene = new THREE.Scene();
-      const holoCam = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
-      holoCam.position.set(0, 0, 5);
-
-      const holoRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      holoRenderer.setSize(w, h);
-      holoRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      parent.appendChild(holoRenderer.domElement);
-
-      // Uniform lighting setup - only ambient light to avoid bright/dark hemisphere effects
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-      holoScene.add(ambientLight);
-
-      // Load NASA high-resolution texture map
-      const loader = new THREE.TextureLoader();
-      const texture = loader.load(`assets/planets/${planetName}.png`);
-      texture.wrapS = THREE.RepeatWrapping;
-
-      // Enable anisotropic filtering to maximize sharpness and realism
-      const maxAnisotropy = holoRenderer.capabilities.getMaxAnisotropy();
-      texture.anisotropy = maxAnisotropy;
-
-      // Realistic 3D Planet material preserving texture details with uniform shading
-      const mat = new THREE.MeshBasicMaterial({
-        map: texture,
-        color: 0xffffff,
-        toneMapped: false
-      });
-
-      const sphereGeo = new THREE.SphereGeometry(1.6, 64, 64);
-      const sphere = new THREE.Mesh(sphereGeo, mat);
-      holoScene.add(sphere);
-
-      let active = true;
-      const clock = new THREE.Clock();
-
-      const loop = () => {
-        if (!active) return;
-        requestAnimationFrame(loop);
-        
-        const elapsed = clock.getElapsedTime();
-        sphere.rotation.y = elapsed * 0.05; // very slow smooth rotation
-        
-        holoRenderer.render(holoScene, holoCam);
-      };
-
-      loop();
-
-      return {
-        sphere: sphere,
-        destroy: () => {
-          active = false;
-          holoRenderer.dispose();
-        }
-      };
-    };
-
     const nameInput = document.getElementById('name');
     const ageInput = document.getElementById('age');
     const classInput = document.getElementById('classField');
@@ -356,13 +52,9 @@
     const cpwd = document.getElementById('confirmPassword');
     const msg = document.getElementById('pwdMessage');
     const btn = document.getElementById('registerBtn');
-    const destNameText = document.getElementById('dest-name');
 
-    let currentHolo = null;
-
-    // Validate inputs dynamically
     function validateForm() {
-      // Age check
+      // 1. Age check
       if (ageInput.value) {
         const ageVal = parseInt(ageInput.value, 10);
         if (isNaN(ageVal) || ageVal < 1 || ageVal > 25) {
@@ -372,7 +64,17 @@
         }
       }
 
-      // Email check
+      // 2. Class check
+      if (classInput.value) {
+        const classVal = parseInt(classInput.value, 10);
+        if (isNaN(classVal) || classVal < 1 || classVal > 12) {
+          msg.textContent = 'Class must be between 1 and 12';
+          btn.disabled = true;
+          return false;
+        }
+      }
+
+      // 3. Email check
       if (emailInput.value) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(emailInput.value.trim())) {
@@ -382,7 +84,7 @@
         }
       }
 
-      // Password strength check
+      // 4. Password strength check
       if (pwd.value) {
         const p = pwd.value;
         if (p.length < 8) {
@@ -406,13 +108,13 @@
           return false;
         }
         if (!/[@$!%*?&]/.test(p)) {
-          msg.textContent = 'Password needs a special character (@$!%*?&)';
+          msg.textContent = 'Password needs at least one special character (@$!%*?&)';
           btn.disabled = true;
           return false;
         }
       }
 
-      // Password match check
+      // 5. Password matching check
       if (pwd.value && cpwd.value && pwd.value !== cpwd.value) {
         msg.textContent = 'Passwords do not match';
         btn.disabled = true;
@@ -424,88 +126,44 @@
       return true;
     }
 
-    // Trigger live hologram projection when Class changes
-    classInput.addEventListener('change', () => {
-      const classVal = classInput.value;
-      const mapping = SpaceEngine.classPlanetMap[classVal];
-      
-      if (mapping) {
-        // 1. Smoothly fade destination text out and back in
-        gsap.to(destNameText, {
-          opacity: 0,
-          y: -5,
-          duration: 0.15,
-          onComplete: () => {
-            destNameText.textContent = mapping.title.toUpperCase();
-            gsap.to(destNameText, { opacity: 1, y: 0, duration: 0.15 });
-          }
-        });
+    ageInput.addEventListener('input', validateForm);
+    classInput.addEventListener('input', validateForm);
+    emailInput.addEventListener('input', validateForm);
+    pwd.addEventListener('input', validateForm);
+    cpwd.addEventListener('input', validateForm);
 
-        // 2. Briefly flash/glow the preview card
-        const holoBox = document.querySelector('.hologram-box');
-        if (holoBox) {
-          gsap.fromTo(holoBox, 
-            { borderColor: 'rgba(59, 130, 246, 0.12)', boxShadow: 'inset 0 0 25px rgba(59, 130, 246, 0.02), 0 0 10px rgba(59, 130, 246, 0.04)' },
-            { borderColor: 'rgba(59, 130, 246, 0.6)', boxShadow: 'inset 0 0 45px rgba(59, 130, 246, 0.3), 0 0 25px rgba(59, 130, 246, 0.4)', duration: 0.15, yoyo: true, repeat: 1 }
-          );
-        }
-
-        // Destroy previous running loop
-        if (currentHolo) {
-          currentHolo.destroy();
-        }
-        
-        // Spawn 3D hologram planet
-        currentHolo = SpaceEngine.createHologramPlanet(mapping.name, 'hologram-viewport');
-
-        // 3. Rotate planet slightly on spawn/change
-        if (currentHolo && currentHolo.sphere) {
-          gsap.from(currentHolo.sphere.rotation, {
-            y: "+=1.2",
-            duration: 0.3,
-            ease: "power2.out"
-          });
-        }
-      }
-      
-      validateForm();
-    });
-
-    [ageInput, emailInput, pwd, cpwd, nameInput].forEach(inp => {
-      inp.addEventListener('input', validateForm);
-    });
-
-    // Form submission launch redirection
     document.getElementById('registerForm').addEventListener('submit', async function(e){
       e.preventDefault();
 
+      // Perform final validation
       if (!validateForm()) return;
 
       const name = nameInput.value.trim();
       const email = emailInput.value.trim();
       const password = pwd.value;
-      const classVal = classInput.value;
-      const mapping = SpaceEngine.classPlanetMap[classVal];
 
-      // Save user flight logs to local cache
-      const userObj = {
-        displayName: name,
-        email: email,
-        class: classVal,
-        planet: mapping.name,
-        destination: mapping.title,
-        theme: mapping.theme
-      };
-      localStorage.setItem('currentUser', JSON.stringify(userObj));
-
-      // Warp page transition with wormhole acceleration
-      SpaceEngine.transitionTo('dashboard.html', (timeline) => {
-        if (SpaceEngine.registerElements && SpaceEngine.registerElements.accelerate) {
-          SpaceEngine.registerElements.accelerate(timeline);
+      if(window.firebase && firebase.auth){
+        try{
+          const res = await firebase.auth().createUserWithEmailAndPassword(email, password);
+          if(res.user && name){
+            await res.user.updateProfile({ displayName: name });
+          }
+          // Redirect straight to dashboard after register
+          window.location.href = 'dashboard.html';
+        }catch(err){
+          alert(err.message || 'Registration failed');
         }
-      });
+        return;
+      }
+
+      // Fallback demo behaviour
+      localStorage.setItem('currentUser', JSON.stringify({ displayName: name, email: email }));
+      alert('Registration successful! Redirecting to dashboard.');
+      window.location.href = 'dashboard.html';
     });
   </script>
-  <script src="starfield-gen.js"></script>
+  <!-- Three.js + Space BG Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="register-bg.js"></script>
 </body>
 </html>

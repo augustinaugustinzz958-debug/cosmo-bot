@@ -1,7 +1,14 @@
 (function(){
-  // 3D space background for Register page
-  // Re-creates the user's reference image in an interactive 3D scene
-  
+  // Shared 3D Deep Space background for Login and Register pages
+  // Re-creates the user's reference image in an interactive 3D scene:
+  // 1. Vibrant violet, deep blue, and neon teal/cyan drifting nebula background.
+  // 2. Large cratered planet in the lower left, tinted blue-teal, with rotating texture.
+  // 3. Realistic detailed 3D ring system tilted from bottom-left to top-right with concentric gaps.
+  // 4. Medium-sized cratered moon in the upper right background.
+  // 5. Smaller moons floating in space (one near the planet, one to the far right).
+  // 6. twinking GPU starfields and drifting cosmic dust.
+  // 7. Interactive camera mouse parallax.
+
   if(typeof THREE === 'undefined') return console.warn('Three.js not loaded');
 
   const container = document.getElementById('galaxy-container');
@@ -31,12 +38,11 @@
   // ================================================================
   const sunDirection = new THREE.Vector3(-45, 30, 40).normalize();
   
-  // Bright main sunlight from top-left
   const sunLight = new THREE.DirectionalLight(0xffeedd, 3.8);
   sunLight.position.copy(sunDirection).multiplyScalar(150);
   scene.add(sunLight);
 
-  // Ambient space light
+  // Ambient fill to replicate the nebula blue glow
   const ambientLight = new THREE.AmbientLight(0x081026, 1.2);
   scene.add(ambientLight);
 
@@ -98,7 +104,7 @@
         
         float f = fbm(p + fbm(p + time * 0.002));
         
-        // Deep space palette matching reference image (original softer colors)
+        // Deep space palette matching reference image
         vec3 colorBlue = vec3(0.01, 0.025, 0.12);
         vec3 colorTeal = vec3(0.0, 0.16, 0.22);
         vec3 colorPurple = vec3(0.18, 0.025, 0.24); // Centered purple flaring
@@ -122,7 +128,7 @@
   // GPU TWINKLING STARFIELD
   // ================================================================
   const starGeo = new THREE.BufferGeometry();
-  const starCount = 2800;
+  const starCount = 3000;
   const starPos = new Float32Array(starCount * 3);
   const randomOffsets = new Float32Array(starCount);
 
@@ -158,8 +164,7 @@
       void main() {
         vec2 uv = gl_PointCoord - vec2(0.5);
         if (length(uv) > 0.5) discard;
-        // Introduce blue/white star variation
-        vec3 color = mix(vec3(1.0, 1.0, 1.0), vec3(0.35, 0.8, 1.0), step(0.75, fract(vTwinkle * 17.0)));
+        vec3 color = vec3(0.9, 0.95, 1.0);
         gl_FragColor = vec4(color, vTwinkle * 0.85);
       }
     `,
@@ -172,144 +177,52 @@
   scene.add(starfield);
 
   // ================================================================
-  // BRIGHT STAR FLARES (Replicates flares from the reference image)
-  // ================================================================
-  function createStarFlareTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 64; canvas.height = 64;
-    const ctx = canvas.getContext('2d');
-    
-    // Draw star core glow
-    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 28);
-    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
-    grad.addColorStop(0.18, 'rgba(120, 220, 255, 0.8)');
-    grad.addColorStop(0.45, 'rgba(0, 110, 255, 0.25)');
-    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(32, 32, 28, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Flare cross lines
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-    ctx.fillRect(2, 31, 60, 2); // Horizontal flare line
-    ctx.fillRect(31, 2, 2, 60); // Vertical flare line
-
-    return new THREE.CanvasTexture(canvas);
-  }
-
-  const flareTex = createStarFlareTexture();
-  const flareMat = new THREE.SpriteMaterial({
-    map: flareTex,
-    color: 0xffffff,
-    transparent: true,
-    blending: THREE.AdditiveBlending
-  });
-
-  // Helper to place flares
-  function addStarFlare(x, y, z, size) {
-    const sprite = new THREE.Sprite(flareMat);
-    sprite.position.set(x, y, z);
-    sprite.scale.set(size, size, 1);
-    scene.add(sprite);
-    return sprite;
-  }
-
-  // Position specific background bright stars
-  const flare2 = addStarFlare(6.0, 8.0, -32, 2.2);   // Nebula flare upper middle
-  const flare3 = addStarFlare(15.0, -2.0, -30, 2.6);  // Right side teal nebula flare
-  const flare4 = addStarFlare(9.5, 9.0, -31, 1.8);   // Near medium moon
-
-  // ================================================================
   // MATERIALS & TEXTURE LOADERS
   // ================================================================
   const planetMat = new THREE.MeshStandardMaterial({
-    color: 0x8ab0f0, // Soft blue-gray tint matching first design
+    color: 0x8ab0f0, // Blue-gray/teal tint matching the image planet
     roughness: 0.82,
-    metalness: 0.08,
-    bumpScale: 0.22  // Active bump depth for ultra-realistic shading
+    metalness: 0.08
   });
 
   const moon2Mat = new THREE.MeshStandardMaterial({
-    color: 0xa8adb8, // Upper-right moon
-    roughness: 0.85,
-    metalness: 0.08,
-    bumpScale: 0.15
+    color: 0x9095a0, // Upper-right moon
+    roughness: 0.9,
+    metalness: 0.05
   });
 
   const moon3Mat = new THREE.MeshStandardMaterial({
-    color: 0x828790, // Small right moon
-    roughness: 0.85,
-    metalness: 0.08,
-    bumpScale: 0.1
+    color: 0x6a6f75, // Small right moon
+    roughness: 0.9,
+    metalness: 0.05
   });
-
-  // High-fidelity fallback procedural canvas texture generator (Detailed craters, grain, atmospheric bands)
-  function createProceduralTexture() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512; canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-    
-    // Base grey-blue rocky planet color
-    ctx.fillStyle = '#627a93'; 
-    ctx.fillRect(0, 0, 512, 512);
-    
-    // Grain/noise
-    for (let i = 0; i < 6000; i++) {
-      const x = Math.random() * 512;
-      const y = Math.random() * 512;
-      const size = Math.random() * 1.5;
-      const val = Math.floor(Math.random() * 26) - 13;
-      ctx.fillStyle = `rgba(${120+val}, ${135+val}, ${150+val}, 0.18)`;
-      ctx.fillRect(x, y, size, size);
-    }
-
-    // Detail Craters with shadows/highlights
-    for(let i=0; i<45; i++){
-      const x = Math.random() * 512;
-      const y = Math.random() * 512;
-      const r = 8 + Math.random() * 24;
-      
-      const grad = ctx.createRadialGradient(x - r*0.2, y - r*0.2, 0, x, y, r);
-      grad.addColorStop(0, 'rgba(40, 55, 70, 0.9)');
-      grad.addColorStop(0.7, 'rgba(75, 95, 115, 0.45)');
-      grad.addColorStop(0.9, 'rgba(165, 190, 215, 0.65)');
-      grad.addColorStop(1, 'rgba(0,0,0,0)');
-      
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(x,y,r,0,Math.PI*2);
-      ctx.fill();
-    }
-
-    // Planetary rings shadow/light bands on surface
-    for (let i = 0; i < 8; i++) {
-      const y = Math.random() * 512;
-      const h = 20 + Math.random() * 40;
-      const grad = ctx.createLinearGradient(0, y, 0, y + h);
-      grad.addColorStop(0, 'rgba(40, 50, 65, 0.0)');
-      grad.addColorStop(0.5, 'rgba(40, 50, 65, 0.2)');
-      grad.addColorStop(1, 'rgba(40, 50, 65, 0.0)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, y, 512, h);
-    }
-
-    return new THREE.CanvasTexture(canvas);
-  }
 
   textureLoader.load(
     MOON_TEX,
     (tex) => {
-      planetMat.map = tex; planetMat.bumpMap = tex; planetMat.needsUpdate = true;
-      moon2Mat.map = tex; moon2Mat.bumpMap = tex; moon2Mat.needsUpdate = true;
-      moon3Mat.map = tex; moon3Mat.bumpMap = tex; moon3Mat.needsUpdate = true;
+      planetMat.map = tex; planetMat.needsUpdate = true;
+      moon2Mat.map = tex; moon2Mat.needsUpdate = true;
+      moon3Mat.map = tex; moon3Mat.needsUpdate = true;
     },
     undefined,
     () => {
-      const tex = createProceduralTexture();
-      planetMat.map = tex; planetMat.bumpMap = tex; planetMat.needsUpdate = true;
-      moon2Mat.map = tex; moon2Mat.bumpMap = tex; moon2Mat.needsUpdate = true;
-      moon3Mat.map = tex; moon3Mat.bumpMap = tex; moon3Mat.needsUpdate = true;
+      // Fallback: create procedural crater texture canvas if offline
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 256;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#6a6c70'; ctx.fillRect(0,0,256,256);
+      for(let i=0; i<30; i++){
+        const x = Math.random()*256;
+        const y = Math.random()*256;
+        const r = 5 + Math.random()*15;
+        const grad = ctx.createRadialGradient(x,y,0, x,y,r);
+        grad.addColorStop(0, '#3a3b3d'); grad.addColorStop(0.8, '#56585c'); grad.addColorStop(1, '#787a7f');
+        ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+      }
+      const tex = new THREE.CanvasTexture(canvas);
+      planetMat.map = tex; planetMat.needsUpdate = true;
+      moon2Mat.map = tex; moon2Mat.needsUpdate = true;
+      moon3Mat.map = tex; moon3Mat.needsUpdate = true;
     }
   );
 
@@ -317,17 +230,18 @@
   // 3D PLANETS ASSEMBLY
   // ================================================================
   
-  // 1. Large Ringed Planet Group
+  // 1. Large Ringed Planet (Lower Left)
   const planetGroup = new THREE.Group();
+  planetGroup.position.set(-8.5, -4.5, -28);
   scene.add(planetGroup);
 
-  const planetRadius = 5.6;
+  const planetRadius = 5.6; // Increased size to match reference image (takes up ~25% of height)
   const planetMesh = new THREE.Mesh(new THREE.SphereGeometry(planetRadius, 48, 48), planetMat);
   planetGroup.add(planetMesh);
 
-  // Concentric Planetary Rings (Vibrant purple/indigo gradient matching reference)
-  const ringInner = 5.8;
-  const ringOuter = 17.5;
+  // Concentric Planetary Rings
+  const ringInner = 7.2;
+  const ringOuter = 17.5; // Made rings much wider to stretch across the left screen space
   const ringGeo = new THREE.RingGeometry(ringInner, ringOuter, 64);
   const ringMat = new THREE.ShaderMaterial({
     vertexShader: `
@@ -344,15 +258,22 @@
         vec2 centerUV = vUv - vec2(0.5);
         float dist = length(centerUV) * 2.0;
         
-        if (dist > 1.0 || dist < 0.33) discard;
+        // Discard pixels outside concentric radius
+        if (dist > 1.0 || dist < 0.41) discard; // ringInner / ringOuter ratio: 7.2 / 17.5 = 0.411
         
-        float radial = (dist - 0.33) / (1.0 - 0.33);
+        float radial = (dist - 0.41) / (1.0 - 0.41);
+        
+        // Concentric band lines
         float lines = sin(radial * 130.0) * 0.45 + 0.55;
         float gap = step(0.18, hash(floor(radial * 60.0)));
-        float alpha = lines * gap * smoothstep(0.0, 0.12, radial) * smoothstep(1.0, 0.88, radial) * 0.72;
-        vec3 ringColor = mix(vec3(0.5, 0.7, 1.0), vec3(0.7, 0.45, 0.9), radial);
         
-        gl_FragColor = vec4(ringColor * 1.6, alpha);
+        // Fades at boundaries
+        float alpha = lines * gap * smoothstep(0.0, 0.12, radial) * smoothstep(1.0, 0.88, radial) * 0.72;
+        
+        // Colors shift from blue-cyan to soft violet
+        vec3 ringColor = mix(vec3(0.32, 0.65, 1.0), vec3(0.68, 0.45, 0.95), radial);
+        
+        gl_FragColor = vec4(ringColor * 1.5, alpha);
       }
     `,
     transparent: true,
@@ -360,53 +281,16 @@
     depthWrite: false
   });
   const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+  // Adjusted tilt: tilted downwards from top-left to bottom-right (z-rotation is negative)
   ringMesh.rotation.set(1.2, 0.2, -0.48);
   planetGroup.add(ringMesh);
 
-  // Atmospheric Scattering Glow Halo (Ultra-realistic blue envelope wrapping the sphere)
-  const glowMat = new THREE.ShaderMaterial({
-    vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vViewPosition;
-      void main() {
-        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-        vNormal = normalize(normalMatrix * normal);
-        vViewPosition = -mvPosition.xyz;
-        gl_Position = projectionMatrix * mvPosition;
-      }
-    `,
-    fragmentShader: `
-      varying vec3 vNormal;
-      varying vec3 vViewPosition;
-      void main() {
-        vec3 normal = normalize(vNormal);
-        vec3 viewDir = normalize(vViewPosition);
-        // Fresnel glow factor (softer and dimmer)
-        float fresnel = pow(1.0 - max(dot(normal, viewDir), 0.0), 3.5);
-        vec3 glowColor = vec3(0.08, 0.35, 0.65);
-        gl_FragColor = vec4(glowColor, fresnel * 0.38);
-      }
-    `,
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    side: THREE.BackSide,
-    depthWrite: false
-  });
-  const glowMesh = new THREE.Mesh(new THREE.SphereGeometry(planetRadius * 1.035, 32, 32), glowMat);
-  planetGroup.add(glowMesh);
-
-  // Small Satellite (Matches small moon at bottom-left of main planet)
+  // Small Satellite orbiting the large planet (positioned at the bottom-left)
   const satGroup = new THREE.Group();
   planetGroup.add(satGroup);
   const satMesh = new THREE.Mesh(new THREE.SphereGeometry(0.52, 16, 16), moon3Mat);
-  satMesh.position.set(-4.5, -2.5, 2.5);
+  satMesh.position.set(-4.5, -2.5, 2.5); // Bottom-left relative offset
   satGroup.add(satMesh);
-
-  // Add the planet-linked bright flare (Moves with the planet)
-  const flare1 = new THREE.Sprite(flareMat);
-  flare1.position.set(-3.0, 8.0, -1.0); // Offset next to planet center
-  flare1.scale.set(3.2, 3.2, 1.0);
-  planetGroup.add(flare1);
 
   // 2. Medium Moon (Upper Right)
   const moon2Mesh = new THREE.Mesh(new THREE.SphereGeometry(2.2, 32, 32), moon2Mat);
@@ -417,54 +301,6 @@
   const moon3Mesh = new THREE.Mesh(new THREE.SphereGeometry(0.48, 16, 16), moon3Mat);
   moon3Mesh.position.set(16.5, 3.5, -32);
   scene.add(moon3Mesh);
-
-  // ================================================================
-  // RESPONSIVE LAYOUT ENGINE (Ensures planet remains visible)
-  // ================================================================
-  let basePlanetX = -9.0;
-  let basePlanetY = -3.0;
-  let basePlanetZ = -28;
-
-  function updateLayout() {
-    const w = window.innerWidth;
-    if (w < 768) {
-      // Mobile: Centered behind the glassmorphic card for visual impact
-      basePlanetX = 0;
-      basePlanetY = 0;
-      basePlanetZ = -28;
-      planetGroup.scale.set(0.68, 0.68, 0.68);
-      
-      // Move other elements to fit the viewport better
-      moon2Mesh.position.set(7.0, -12.0, -32);
-      moon3Mesh.position.set(11.0, -14.0, -34);
-    } else if (w < 1024) {
-      // Tablet: Mid-left position (slightly further left than login for Register card)
-      basePlanetX = -6.5;
-      basePlanetY = -2.0;
-      basePlanetZ = -28;
-      planetGroup.scale.set(0.85, 0.85, 0.85);
-      
-      moon2Mesh.position.set(9.0, 8.0, -30);
-      moon3Mesh.position.set(13.0, 4.0, -32);
-    } else {
-      // Desktop: Standard position (left side, full scale, offset to -9.0 for Register card width)
-      basePlanetX = -9.0;
-      basePlanetY = -3.0;
-      basePlanetZ = -28;
-      planetGroup.scale.set(1.0, 1.0, 1.0);
-      
-      moon2Mesh.position.set(12.0, 7.5, -30);
-      moon3Mesh.position.set(16.5, 3.5, -32);
-    }
-    
-    planetGroup.position.set(basePlanetX, basePlanetY, basePlanetZ);
-    camera.aspect = w / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, window.innerHeight);
-  }
-
-  // Initial call
-  updateLayout();
 
   // ================================================================
   // VOLUMETRIC DUST
@@ -498,7 +334,7 @@
   scene.add(dustfield);
 
   // ================================================================
-  // ANIMATION LOOP
+  // MOUSE PARALLAX & ANIMATION LOOP
   // ================================================================
   let mouseX = 0, mouseY = 0;
   const halfW = window.innerWidth / 2;
@@ -515,14 +351,19 @@
     requestAnimationFrame(animate);
     const t = clock.getElapsedTime();
 
+    // 1. Shaders updates
     starShaderMat.uniforms.time.value = t;
     nebulaShaderMat.uniforms.time.value = t;
 
+    // 2. Planets self rotations
     planetMesh.rotation.y = t * 0.005;
     moon2Mesh.rotation.y = t * 0.003;
     moon3Mesh.rotation.y = t * 0.002;
+
+    // 3. Moon satellite orbit
     satGroup.rotation.y = t * 0.02;
 
+    // 4. Volumetric dust float
     const positions = dustfield.geometry.attributes.position.array;
     for (let i = 0; i < dustCount; i++) {
       positions[i * 3] += dustSpeeds[i].x;
@@ -535,7 +376,7 @@
     }
     dustfield.geometry.attributes.position.needsUpdate = true;
 
-    // Mouse Parallax
+    // 5. Camera mouse parallax
     const targetCamX = (mouseX / halfW) * 2.5;
     const targetCamY = -(mouseY / halfH) * 1.5;
 
@@ -543,42 +384,34 @@
     camera.position.y += (targetCamY - camera.position.y) * 0.035;
     camera.lookAt(0, 0, 0);
 
-    // Shifts
+    // Dynamic depth parallax shifts
     nebulaPlane.position.x = camera.position.x * 0.85;
     nebulaPlane.position.y = camera.position.y * 0.85;
 
     starfield.position.x = camera.position.x * 0.7;
     starfield.position.y = camera.position.y * 0.7;
 
-    // Dynamic Parallax Shifts
-    planetGroup.position.x = basePlanetX + camera.position.x * 0.35;
-    planetGroup.position.y = basePlanetY + camera.position.y * 0.35;
+    planetGroup.position.x = -8.5 + camera.position.x * 0.35;
+    planetGroup.position.y = -4.5 + camera.position.y * 0.35;
 
-    // Moon updates
-    if (window.innerWidth < 768) {
-      moon2Mesh.position.x = 6.0 + camera.position.x * 0.25;
-      moon2Mesh.position.y = -12.0 + camera.position.y * 0.25;
-    } else if (window.innerWidth < 1024) {
-      moon2Mesh.position.x = 9.0 + camera.position.x * 0.25;
-      moon2Mesh.position.y = 8.0 + camera.position.y * 0.25;
-    } else {
-      moon2Mesh.position.x = 12.0 + camera.position.x * 0.25;
-      moon2Mesh.position.y = 7.5 + camera.position.y * 0.25;
-    }
-
-    // Sync flares slightly with camera parallax
-    flare2.position.x = 6.0 + camera.position.x * 0.3;
-    flare2.position.y = 8.0 + camera.position.y * 0.3;
-    flare3.position.x = 15.0 + camera.position.x * 0.2;
-    flare3.position.y = -2.0 + camera.position.y * 0.2;
-    flare4.position.x = 9.5 + camera.position.x * 0.25;
-    flare4.position.y = 9.0 + camera.position.y * 0.25;
+    moon2Mesh.position.x = 12.0 + camera.position.x * 0.25;
+    moon2Mesh.position.y = 7.5 + camera.position.y * 0.25;
 
     renderer.render(scene, camera);
   }
 
   animate();
 
-  window.addEventListener('resize', updateLayout);
+  // ================================================================
+  // RESPONSIVE RESIZE
+  // ================================================================
+  window.addEventListener('resize', () => {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
 
 })();
